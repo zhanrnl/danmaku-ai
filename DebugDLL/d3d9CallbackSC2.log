@@ -1,0 +1,35 @@
+﻿Build started 7/15/2014 2:17:07 PM.
+     1>Project "C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\d3d9CallbackSC2.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\ /I..\ /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D D3DCALLBACK_EXPORTS /D _WINDLL /D D3DCALLBACK_DLL /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"Main.h" /Fp"DebugDLL\d3d9Callback.pch" /Fo"DebugDLL\\" /Fd"DebugDLL\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Managers\RenderManager.cpp
+         RenderManager.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.dll" /INCREMENTAL /NOLOGO libpng.lib zdll.lib d3dx9.lib ann.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:LIBCMT.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.lib" /MACHINE:X86 /SAFESEH /DLL DebugDLL\AIParameters.obj
+         DebugDLL\d3d9Callback.obj
+         DebugDLL\Engine.obj
+         DebugDLL\GlobalContext.obj
+         DebugDLL\Main.obj
+         DebugDLL\ManagerController.obj
+         DebugDLL\DatabaseManager.obj
+         DebugDLL\KeyboardMouseManager.obj
+         DebugDLL\RenderManager.obj
+         DebugDLL\StateManager.obj
+         DebugDLL\TextureEntryManager.obj
+         DebugDLL\Buffers.obj
+         DebugDLL\CapturedGeometry.obj
+         DebugDLL\Constants.obj
+         DebugDLL\EnumString.obj
+         DebugDLL\EnumStringDirectX.obj
+         DebugDLL\HelperFunctions.obj
+         DebugDLL\HelperStructures.obj
+         DebugDLL\ShaderObjects.obj
+         DebugDLL\VertexShader.obj
+         DebugDLL\VertexShaderSimulator.obj
+     1>AIParameters.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+            Creating library C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.lib and object C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.exp
+         d3d9CallbackSC2.vcxproj -> C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\DebugDLL\d3d9Callback.dll
+     1>Done Building Project "C:\Users\lennart\Downloads\D3D9CallbackSC2\D3D9CallbackSC2\d3d9CallbackSC2.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.87
