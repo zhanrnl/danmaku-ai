@@ -1128,65 +1128,10 @@ void RenderManager::ProcessFont(RenderInfo &Info)
 
 bool RenderManager::PreRenderQuery(D3DPRIMITIVETYPE PrimitiveType, UINT PrimitiveCount)
 {
-    /*const bool IsMinimapViewport = (PrimitiveType == D3DPT_LINELIST && PrimitiveCount >= 4);
-    if(IsMinimapViewport && g_Context->Managers.Minimap.MinimapCaptureNeeded() && !g_Context->Parameters.VideoCaptureMode)
-    {
-        CaptureCurrentRenderTargetSubset(g_Context->Managers.Minimap.Minimap(), g_Context->Constants.GetRectangle2iConstant(ScreenConstantRectangle2iMinimapRegion));
-        g_Context->Managers.Minimap.ReportMinimapCapture();
-        g_Context->Managers.Knowledge.MatchMinimap();
-        g_Context->Managers.Knowledge.UpdateBaseOwnership();
-        g_Context->Managers.Knowledge.UpdateScoutLocation();
-    }*/
 
 	const Texture *Texture0 = g_Context->Managers.State.CurTexture[0];
     const RenderType Type0 = Texture0->Type();
     const String &ID0 = Texture0->ID();
-
-	const bool EnableTextureReplacement = false;
-	if(EnableTextureReplacement)
-	{
-		//if(Type0 == RenderUnit)
-		{
-			if(_ScratchTextures[0] == NULL)
-			{
-				/*Bitmap Bmp(1024, 1024);
-				Bmp.Clear(RGBColor(0, 0, 0, 128));
-				for(UINT y = 0; y < 1024; y++)
-				{
-					for(UINT x = 0; x < 1024; x++)
-					{
-						RGBColor C;
-						if((x / 45 + y / 45) % 2 == 0)
-						{
-							//C = RGBColor(230, 210, 200, 0);
-							C = RGBColor(230, 210, 200, 0);
-						}
-						else
-						{
-							C = RGBColor(0, 128, 0, 255);
-						}
-						Bmp[y][x] = C;
-					}
-				}*/
-
-				Bitmap Bmp;
-				Bmp.LoadPNG("C:\\Code\\allProjects\\WebPage\\Images\\Fire.png");
-				//Bmp.LoadPNG("C:\\Code\\allProjects\\WebPage\\Images\\Rainbow.png");
-				for(UINT y = 0; y < Bmp.Height(); y++)
-				{
-					for(UINT x = 0; x < Bmp.Width(); x++)
-					{
-						RGBColor C = Bmp[y][x];
-						C.a = 128;
-						Bmp[y][x] = C;
-					}
-				}
-
-				UpdateScratchTexture(0, Bmp);
-			}
-			g_Context->Graphics.Device()->SetTexture(1, _ScratchTextures[0]);
-		}
-	}
 
 	return false;
     if((!g_Context->Controller.AIEnabled() && !g_ReportingEvents) || WebpageCaptureMode)
@@ -1212,8 +1157,6 @@ void PrintVertex(TriListVertex &v) {
 bool RenderManager::Draw(RenderInfo &Info)
 {
 	bool RenderHighlighted = false;
-
-    //FrameHUDManager &FrameHUD = g_Context->Managers.FrameHUD;
     
     Info.Texture0 = g_Context->Managers.State.CurTexture[0];
     Info.Texture1 = g_Context->Managers.State.CurTexture[1];
@@ -1244,33 +1187,13 @@ bool RenderManager::Draw(RenderInfo &Info)
 
     VertexProcessingOptions Options;
     Options.FullSimulation = g_ReportingEvents;
-    /*const bool IsBubblePortrait = (Type1 == RenderPortrait && Type0 == RenderSpecial && ID0 == "PortraitBubble");
-    const bool IsActionButtonBackground = (Type0 == RenderSpecial && (ID0 == "ActionButtonBubble" || ID0 == "ActionButtonSelectedBubble"));
-    const bool IsHealthBars = (Type0 == RenderSpecial && ID0 == "HealthBar");
-    const bool IsActionButtonIcon = (Type0 == RenderIcon && Info.PrimitiveCount == 2);
-    const bool IsMinimapViewport = (Info.PrimitiveType == D3DPT_LINELIST && Info.PrimitiveCount >= 4);
-    const bool IsMinimapOverlay = (Info.PrimitiveType == D3DPT_TRIANGLELIST && (Info.VShaderHash == 45060992 || Info.VShaderHash == 223501548 || Info.VShaderHash == 46808798 || Info.VShaderHash == 142740452) && (Info.PShaderHash == 100941487 || Info.PShaderHash == 215755818 || Info.PShaderHash == 100941487));
-    const bool IsNormalPortrait = (Type0 == RenderPortrait);*/
-    
-    /*if(Type0 == RenderUnit)
-    {
-        Options.FullSimulation = true;
-    }*/
+
     if(Type0 == RenderFont)
     {
         Options.FullSimulation = true;
     }
-    /*if(IsBubblePortrait || IsMinimapViewport || IsActionButtonBackground || IsActionButtonIcon || IsNormalPortrait || IsHealthBars)
-    {
-        Options.FullSimulation = true;
-    }*/
     
     DoTransforms(Info, Options);
-
-    /*if(Type0 == RenderUnit)
-    {
-        g_Context->Managers.FrameUnit.ReportUnitRender(Info);
-    }*/
 
 	if (Info.PrimitiveType == D3DPT_TRIANGLELIST) {
 		g_Context->Files.CurrentFrameAllEvents << "VERTICES" << endl;
@@ -1283,69 +1206,6 @@ bool RenderManager::Draw(RenderInfo &Info)
 			g_Context->Files.CurrentFrameAllEvents << endl;
 		}
 	}
-
-    /*if(IsBubblePortrait || IsNormalPortrait)
-    {
-        FrameHUD.ReportPortrait(Info, _HardwareProcessedVertices);
-    }*/
-    /*if(Type0 == RenderSpecial)
-    {
-        if(ID0 == "BuildQueueFive")
-        {
-            g_Context->Managers.FrameHUD.ReportBuildQueue();
-        }
-        else if(ID0 == "ZergIdleWorker")
-        {
-            g_Context->Managers.Knowledge.ReportRace(RaceZerg);
-            FrameHUD.ReportIdleWorker();
-        }
-        else if(ID0 == "ProtossIdleWorker")
-        {
-            g_Context->Managers.Knowledge.ReportRace(RaceProtoss);
-            FrameHUD.ReportIdleWorker();
-        }
-        else if(ID0 == "TerranIdleWorker")
-        {
-            g_Context->Managers.Knowledge.ReportRace(RaceTerran);
-            FrameHUD.ReportIdleWorker();
-        }
-        else if(ID0 == "PortraitBubble" && Type1 == RenderIcon)
-        {
-            FrameHUD.ReportBubbleIcon(Info);
-        }
-        else if(ID0 == "ControlGroupLevels")
-        {
-            FrameHUD.ReportControlGroupLevel(Info);
-        }
-        else if(ID0 == "WarpGateReady")
-        {
-            FrameHUD.ReportWarpGatePresent();
-        }
-		else if(ID0 == "ActionButtonOverlay")
-        {
-            g_Context->Managers.State.PShaderFloatConstants[0] = Vec4f::Origin;
-        }
-    }*/
-    /*if(IsHealthBars)
-    {
-        g_Context->Managers.FrameUnit.ReportHealthBars(Info, _HardwareProcessedVertices);
-    }
-    if(IsActionButtonBackground)
-    {
-        FrameHUD.ReportActionButtonBackground(Info, _HardwareProcessedVertices);
-    }
-    if(IsActionButtonIcon)
-    {
-        FrameHUD.ReportActionButtonIcon(Info, _HardwareProcessedVertices);
-    }
-    if(IsMinimapViewport)
-    {
-        FrameHUD.ReportMinimapViewport(Info, _HardwareProcessedVertices);
-    }
-    if(ID0 == "Font")
-    {
-        ProcessFont(Info);
-    }*/
 
     //
     // Report this render event if appropriate

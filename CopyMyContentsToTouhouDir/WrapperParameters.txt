@@ -1,0 +1,14 @@
+BaseDirectory=C:\Users\lennart\Desktop\TH10\TH10-Mountain-of-Faith\AIBaseDirectory
+BaseCaptureDirectory=C:\Users\lennart\Desktop\TH10\TH10-Mountain-of-Faith\AIBaseDirectory
+BaseDataDirectory=C:\Users\lennart\Desktop\TH10\TH10-Mountain-of-Faith\AIBaseDirectory
+OutputFileDirectory=Output
+ScreenCaptureDirectory=Output
+TextureCaptureDirectory=Output
+LetterCaptureDirectory=Output
+ShaderCaptureDirectory=Output
+RealD3D9DLL=C:\Windows\System32\d3d9.dll
+IgnoreTextureLocks=false
+ForceSoftwareVertexProcessing=true
+UsingOverlay=true
+ConsoleLineCount=15
+VideoCaptureMode=false
