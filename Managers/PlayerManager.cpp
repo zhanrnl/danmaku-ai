@@ -2,10 +2,15 @@
 
 #include "PlayerManager.h"
 
-PlayerManager::PlayerManager() {
-
+PlayerManager::PlayerManager() : gameplay() {
+	
 }
 
 PlayerManager::~PlayerManager() {
 
+}
+
+void PlayerManager::EndFrame() {
+	
+	gameplay.move(0, true, true);
 }

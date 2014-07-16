@@ -150,6 +150,10 @@
     <ClCompile Include="Objects\ShaderObjects.cpp" />
     <ClCompile Include="Objects\VertexShader.cpp" />
     <ClCompile Include="Objects\VertexShaderSimulator.cpp" />
+    <ClCompile Include="OutputLayer\gameplay.cpp" />
+    <ClCompile Include="OutputLayer\keyboard.cpp" />
+    <ClCompile Include="OutputLayer\navigation.cpp" />
+    <ClCompile Include="OutputLayer\options.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AIParameters.h" />
@@ -181,6 +185,10 @@
     <ClInclude Include="Objects\VertexShader.h" />
     <ClInclude Include="Objects\VertexShaderInstructions.h" />
     <ClInclude Include="Objects\VertexShaderSimulator.h" />
+    <ClInclude Include="OutputLayer\gameplay.h" />
+    <ClInclude Include="OutputLayer\keyboard.h" />
+    <ClInclude Include="OutputLayer\navigation.h" />
+    <ClInclude Include="OutputLayer\options.h" />
     <ClInclude Include="Threads\AIThread.h" />
     <ClInclude Include="Threads\Strats.h" />
     <ClInclude Include="TouhouConstants.h" />
