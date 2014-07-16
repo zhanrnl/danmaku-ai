@@ -29,7 +29,7 @@ void ManagerController::Init()
     _ManagerList.PushEnd(&g_Context->Managers.State);
     _ManagerList.PushEnd(&g_Context->Managers.Render);
     _ManagerList.PushEnd(&g_Context->Managers.TextureEntry);
-    _ManagerList.PushEnd(&g_Context->Managers.Database);
+    //_ManagerList.PushEnd(&g_Context->Managers.Database);
     //_ManagerList.PushEnd(&g_Context->Managers.FrameUnit);
     //_ManagerList.PushEnd(&g_Context->Managers.FrameHUD);
     //_ManagerList.PushEnd(&g_Context->Managers.Minimap);

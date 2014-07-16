@@ -36,3 +36,5 @@ Icon
 .Trashes
 
 *.opensdf
+DebugDLL
+ipch

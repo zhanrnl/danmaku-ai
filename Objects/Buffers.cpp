@@ -300,12 +300,7 @@ void Texture::Update(const Bitmap &Bmp, const D3DSURFACE_DESC &Desc)
             g_Context->Controller.TexturesSavedThisFrame()++;
         }
     }
-
-    if(_Type == RenderUnit || _Type == RenderPortrait)
-    {
-        _Unit = g_Context->Managers.Database.GetUnitEntry(_ID);
-    }
-
+	
     if(WebpageCaptureMode)
 	{
 		_Bmp = Bmp;

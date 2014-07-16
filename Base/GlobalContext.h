@@ -72,7 +72,7 @@ struct ManagerList
     //FrameUnitManager        FrameUnit;
     //FrameHUDManager         FrameHUD;
     //MinimapManager          Minimap;
-    DatabaseManager         Database;
+    //DatabaseManager         Database;
     //ThoughtManager          Thought;
     KeyboardMouseManager    KeyboardMouse;
     //KnowledgeManager        Knowledge;

@@ -1154,6 +1154,10 @@ void PrintVertex(TriListVertex &v) {
 	g_Context->Files.CurrentFrameAllEvents << "    Position {" << v.p.x << ", " << v.p.y << ", " << v.p.z << "}  UV {" << v.uv.x << ", " << v.uv.y << "}" << endl;
 }
 
+bool IsBulletDrawCall(RenderInfo &Info) {
+	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && Info.Texture0->BmpHash() == BULLETS_HASH;
+}
+
 bool RenderManager::Draw(RenderInfo &Info)
 {
 	bool RenderHighlighted = false;
@@ -1195,7 +1199,8 @@ bool RenderManager::Draw(RenderInfo &Info)
     
     DoTransforms(Info, Options);
 
-	if (Info.PrimitiveType == D3DPT_TRIANGLELIST) {
+	bool isBulletDraw = IsBulletDrawCall(Info);
+	if (isBulletDraw) {
 		g_Context->Files.CurrentFrameAllEvents << "VERTICES" << endl;
 		int prim_count = Info.PrimitiveCount;
 		TriListVertex *vs = (TriListVertex *)Info.UserVertexData;

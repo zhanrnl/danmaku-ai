@@ -131,7 +131,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Base\ManagerController.cpp" />
-    <ClCompile Include="Managers\DatabaseManager.cpp" />
     <ClCompile Include="Managers\KeyboardMouseManager.cpp" />
     <ClCompile Include="Managers\RenderManager.cpp" />
     <ClCompile Include="Managers\StateManager.cpp" />
@@ -157,7 +156,6 @@
     <ClInclude Include="Base\GlobalContext.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Base\ManagerController.h" />
-    <ClInclude Include="Managers\DatabaseManager.h" />
     <ClInclude Include="Managers\KeyboardMouseManager.h" />
     <ClInclude Include="Managers\Manager.h" />
     <ClInclude Include="Managers\RenderManager.h" />
