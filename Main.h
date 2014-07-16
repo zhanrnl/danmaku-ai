@@ -122,6 +122,7 @@ class VShaderSimulator;
 #include "Managers/KeyboardMouseManager.h"
 //#include "Managers/ThoughtManager.h"
 //#include "Managers/ControlGroupManager.h"
+#include "Managers/BulletManager.h"
 
 #include "Base/ManagerController.h"
 #include "Base/GlobalContext.h"

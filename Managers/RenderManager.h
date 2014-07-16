@@ -7,7 +7,8 @@
 const UINT MaxTexCoords = 8;
 const UINT MaxColorCoords = 2;
 
-const UINT BULLETS_HASH = 3924195017;
+const UINT BULLETS1_HASH = 3924195017;
+const UINT BULLETS2_HASH = 2731789217;
 
 //
 // All information about a single render event

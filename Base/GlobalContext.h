@@ -77,6 +77,7 @@ struct ManagerList
     KeyboardMouseManager    KeyboardMouse;
     //KnowledgeManager        Knowledge;
     //ControlGroupManager     ControlGroup;
+	BulletManager           Bullet;
 };
 
 struct FileList

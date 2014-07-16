@@ -1,4 +1,5 @@
 #include "Main.h"
+#include "Bullet.h"
 
 RenderManager::RenderManager()
 {
@@ -1151,11 +1152,19 @@ bool RenderManager::PreRenderQuery(D3DPRIMITIVETYPE PrimitiveType, UINT Primitiv
 }
 
 void PrintVertex(TriListVertex &v) {
-	g_Context->Files.CurrentFrameAllEvents << "    Position {" << v.p.x << ", " << v.p.y << ", " << v.p.z << "}  UV {" << v.uv.x << ", " << v.uv.y << "}" << endl;
+	g_Context->Files.Thought << "    Position {" << v.p.x << ", " << v.p.y << ", " << v.p.z << "}  UV {" << v.uv.x << ", " << v.uv.y << "}" << endl;
 }
 
 bool IsBulletDrawCall(RenderInfo &Info) {
-	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && Info.Texture0->BmpHash() == BULLETS_HASH;
+	UINT bmpHash = Info.Texture0->BmpHash();
+	/*
+	g_Context->Files.CurrentFrameAllEvents << "Is bullet draw call?" << endl;
+	g_Context->Files.CurrentFrameAllEvents << (Info.PrimitiveType == D3DPT_TRIANGLELIST) << endl;
+	g_Context->Files.CurrentFrameAllEvents << (Info.PrimitiveType % 2 == 0) << endl;
+	g_Context->Files.CurrentFrameAllEvents << bmpHash << " " << BULLETS1_HASH << " " << BULLETS2_HASH << endl;
+	*/
+	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && 
+		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH);
 }
 
 bool RenderManager::Draw(RenderInfo &Info)
@@ -1199,16 +1208,13 @@ bool RenderManager::Draw(RenderInfo &Info)
     
     DoTransforms(Info, Options);
 
-	bool isBulletDraw = IsBulletDrawCall(Info);
-	if (isBulletDraw) {
-		g_Context->Files.CurrentFrameAllEvents << "VERTICES" << endl;
+	if (IsBulletDrawCall(Info)) {
 		int prim_count = Info.PrimitiveCount;
 		TriListVertex *vs = (TriListVertex *)Info.UserVertexData;
-		for (int i = 0; i < prim_count; i++) {
-			for (int j = 0; j < 3; j++) {
-				PrintVertex(vs[i * 3 + j]);
-			}
-			g_Context->Files.CurrentFrameAllEvents << endl;
+		g_Context->Managers.Bullet.LoadBulletsFromCall(prim_count, vs, Info);
+		if (g_ReportingEvents) {
+			g_Context->Files.Thought << "BULLETS IN FRAME " << g_Context->Controller.FrameIndex() << endl;
+			g_Context->Managers.Bullet.PrintAllBullets(g_Context->Files.Thought);
 		}
 	}
 

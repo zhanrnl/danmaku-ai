@@ -126,6 +126,8 @@
     <ClCompile Include="Base\d3d9Callback.cpp" />
     <ClCompile Include="Base\Engine.cpp" />
     <ClCompile Include="Base\GlobalContext.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Managers\BulletManager.cpp" />
     <ClCompile Include="Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
@@ -154,6 +156,8 @@
     <ClInclude Include="Base\DisplayOptions.h" />
     <ClInclude Include="Base\Engine.h" />
     <ClInclude Include="Base\GlobalContext.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Managers\BulletManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Base\ManagerController.h" />
     <ClInclude Include="Managers\KeyboardMouseManager.h" />
