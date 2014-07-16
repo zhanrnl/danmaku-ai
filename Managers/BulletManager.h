@@ -3,12 +3,20 @@
 class BulletManager : public Manager
 {
 public:
-	vector<Bullet> bullets;
-	vector<Bullet> prevBullets;
 	UINT currentFrameIndex;
-	void LoadBulletsFromCall(int numPrimitives, TriListVertex *vs, RenderInfo info, UINT frameIndex);
+	void LoadBulletsFromCall(RenderInfo &info, UINT frameIndex);
 	void PrintAllBullets(ofstream &s);
 	BulletManager();
 	~BulletManager();
+
+private:
+	void UpdateBullets();
+	static bool IsValidBucket(int x, int y);
+
+	vector<Bullet> bullets;
+	vector<Bullet> prevBullets;
+
+	static const int GRID = 50;
+	vector<Bullet> buckets[GRID][GRID];
 };
 

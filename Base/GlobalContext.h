@@ -78,6 +78,8 @@ struct ManagerList
     //KnowledgeManager        Knowledge;
     //ControlGroupManager     ControlGroup;
 	BulletManager           Bullet;
+	CharacterManager        Character;
+	PlayerManager			Player;
 };
 
 struct FileList

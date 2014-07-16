@@ -54,6 +54,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <IncludePath>C:\Users\lennart\Downloads\Includes\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\lennart\Downloads\Libraries\Libraries;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Users\lennart\Downloads\D3D9CallbackSC2\Engine;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
@@ -127,6 +128,7 @@
     <ClCompile Include="Base\Engine.cpp" />
     <ClCompile Include="Base\GlobalContext.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Managers\CharacterManager.cpp" />
     <ClCompile Include="Managers\BulletManager.cpp" />
     <ClCompile Include="Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
@@ -134,6 +136,7 @@
     </ClCompile>
     <ClCompile Include="Base\ManagerController.cpp" />
     <ClCompile Include="Managers\KeyboardMouseManager.cpp" />
+    <ClCompile Include="Managers\PlayerManager.cpp" />
     <ClCompile Include="Managers\RenderManager.cpp" />
     <ClCompile Include="Managers\StateManager.cpp" />
     <ClCompile Include="Managers\TextureEntryManager.cpp" />
@@ -157,11 +160,13 @@
     <ClInclude Include="Base\Engine.h" />
     <ClInclude Include="Base\GlobalContext.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Managers\CharacterManager.h" />
     <ClInclude Include="Managers\BulletManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Base\ManagerController.h" />
     <ClInclude Include="Managers\KeyboardMouseManager.h" />
     <ClInclude Include="Managers\Manager.h" />
+    <ClInclude Include="Managers\PlayerManager.h" />
     <ClInclude Include="Managers\RenderManager.h" />
     <ClInclude Include="Managers\StateManager.h" />
     <ClInclude Include="Managers\TextureEntryManager.h" />
@@ -178,6 +183,7 @@
     <ClInclude Include="Objects\VertexShaderSimulator.h" />
     <ClInclude Include="Threads\AIThread.h" />
     <ClInclude Include="Threads\Strats.h" />
+    <ClInclude Include="TouhouConstants.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\SC2AIData\Parameters\AIParameters.txt" />

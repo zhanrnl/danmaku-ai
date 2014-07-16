@@ -9,6 +9,10 @@ const UINT MaxColorCoords = 2;
 
 const UINT BULLETS1_HASH = 3924195017;
 const UINT BULLETS2_HASH = 2731789217;
+const UINT REIMU_HASH = 2973107762;
+const UINT MARISA_HASH = 755481399;
+const UINT POWERUP_HASH = 334748864;
+const UINT SCORE_HASH = 4102754665;
 
 //
 // All information about a single render event

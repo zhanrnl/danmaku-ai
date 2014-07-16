@@ -31,7 +31,7 @@ public:
 	Vec2f center;
 	Vec2f dimensions;
 	float rotation; // in radians
-	float speed;
+	Vec2f velocity;
 	BulletType bulletType;
 
 	Bullet(TriListVertex *vertices, RenderInfo info);
@@ -39,6 +39,7 @@ public:
 
 	void Print(ofstream &s);
 	bool IsDeadly();
+	float DistanceTo(const Bullet &other);
 
 };
 

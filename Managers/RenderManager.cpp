@@ -1161,6 +1161,18 @@ bool IsBulletDrawCall(RenderInfo &Info) {
 		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH);
 }
 
+bool IsCharacterDrawCall(RenderInfo &Info) {
+	UINT bmpHash = Info.Texture0->BmpHash();
+	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 &&
+		(bmpHash == REIMU_HASH || bmpHash == MARISA_HASH);
+}
+
+bool IsScoreDrawCall(RenderInfo &Info) {
+	UINT bmpHash = Info.Texture0->BmpHash();
+	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 &&
+		(bmpHash == SCORE_HASH);
+}
+
 bool RenderManager::Draw(RenderInfo &Info)
 {
 	bool RenderHighlighted = false;
@@ -1203,13 +1215,24 @@ bool RenderManager::Draw(RenderInfo &Info)
     DoTransforms(Info, Options);
 
 	if (IsBulletDrawCall(Info)) {
-		int numPrimitives = Info.PrimitiveCount;
-		TriListVertex *vs = (TriListVertex *)Info.UserVertexData;
-		g_Context->Managers.Bullet.LoadBulletsFromCall(numPrimitives, vs, Info, g_Context->Controller.FrameIndex());
-		if (g_ReportingEvents) {
+		g_Context->Managers.Bullet.LoadBulletsFromCall(Info, g_Context->Controller.FrameIndex());
+		/*if (g_ReportingEvents) {
 			g_Context->Files.Thought << "BULLETS IN FRAME " << g_Context->Controller.FrameIndex() << endl;
 			g_Context->Managers.Bullet.PrintAllBullets(g_Context->Files.Thought);
-		}
+		}*/
+	}
+
+	if (IsCharacterDrawCall(Info)) {
+		//TriListVertex* t = (TriListVertex*)(Info.UserVertexData);
+		//t->uv.x = 0.0;
+		g_Context->Managers.Character.UpdateCharacterFromCall(Info);
+		/*if (g_ReportingEvents) {
+			g_Context->Files.CurrentFrameAllEvents << "REIMU {" << g_Context->Managers.Character.position.x << ", " << g_Context->Managers.Character.position.y << "}" << endl;
+		}*/
+	}
+
+	if (IsScoreDrawCall(Info)) {
+		g_Context->Managers.Character.UpdateScoreFromCall(Info);
 	}
 
     //

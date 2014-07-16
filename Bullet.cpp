@@ -3,6 +3,7 @@
 #include "Bullet.h"
 
 const float EPSILON = 0.00001f;
+const float DISTANCE_ROT_SCALE = 200.f;
 
 BulletType BulletTypeFor(UINT textureHash, float u, float v) {
 	BulletType bulletType;
@@ -39,6 +40,9 @@ BulletType BulletTypeFor(UINT textureHash, float u, float v) {
 		if (row >= 6) {
 			bulletType = LARGE_BUBBLE_BULLET;
 		}
+		else if (row == 5) {
+			bulletType = NOT_DEADLY_BULLET;
+		}
 		else {
 			bulletType = (BulletType)row;
 		}
@@ -66,7 +70,7 @@ Bullet::Bullet(TriListVertex *vertices, RenderInfo info) {
 	dimensions = Vec2f(upperside.Length(), (upper_left - lower_left).Length());
 
 	rotation = atan2(upperside.y, upperside.x);
-	speed = 0.0;
+	velocity = Vec2f(0.0f,0.0f);
 	
 	float u = upper_left_list.uv.x;
 	float v = upper_left_list.uv.y;
@@ -80,5 +84,19 @@ void Bullet::Print(ofstream &s) {
 }
 
 bool Bullet::IsDeadly() {
-	return bulletType != NOT_DEADLY_BULLET;
+	// TODO: update this.
+	return true;
+}
+
+// "Distance" function for evaluating possible frame-to-frame matches.
+// Returns square of distance so we don't have to take a square root.
+float Bullet::DistanceTo(const Bullet &other) {
+	if (bulletType != other.bulletType)
+		return FLT_MAX;
+	float squaredSum = (center - other.center).LengthSq();
+	float dRot = rotation - other.rotation;
+	while (dRot >= Math::PI) dRot -= float(2 * Math::PI);
+	while (dRot < -Math::PI) dRot += float(2 * Math::PI);
+	squaredSum += dRot * dRot * DISTANCE_ROT_SCALE;
+	return squaredSum;
 }

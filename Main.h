@@ -123,6 +123,8 @@ class VShaderSimulator;
 //#include "Managers/ThoughtManager.h"
 //#include "Managers/ControlGroupManager.h"
 #include "Managers/BulletManager.h"
+#include "Managers/CharacterManager.h"
+#include "Managers/PlayerManager.h"
 
 #include "Base/ManagerController.h"
 #include "Base/GlobalContext.h"
