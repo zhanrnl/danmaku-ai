@@ -4,7 +4,9 @@ class BulletManager : public Manager
 {
 public:
 	vector<Bullet> bullets;
-	void LoadBulletsFromCall(int prim_count, TriListVertex *vs, RenderInfo info);
+	vector<Bullet> prevBullets;
+	UINT currentFrameIndex;
+	void LoadBulletsFromCall(int numPrimitives, TriListVertex *vs, RenderInfo info, UINT frameIndex);
 	void PrintAllBullets(ofstream &s);
 	BulletManager();
 	~BulletManager();

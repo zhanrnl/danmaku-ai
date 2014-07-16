@@ -1157,12 +1157,6 @@ void PrintVertex(TriListVertex &v) {
 
 bool IsBulletDrawCall(RenderInfo &Info) {
 	UINT bmpHash = Info.Texture0->BmpHash();
-	/*
-	g_Context->Files.CurrentFrameAllEvents << "Is bullet draw call?" << endl;
-	g_Context->Files.CurrentFrameAllEvents << (Info.PrimitiveType == D3DPT_TRIANGLELIST) << endl;
-	g_Context->Files.CurrentFrameAllEvents << (Info.PrimitiveType % 2 == 0) << endl;
-	g_Context->Files.CurrentFrameAllEvents << bmpHash << " " << BULLETS1_HASH << " " << BULLETS2_HASH << endl;
-	*/
 	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && 
 		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH);
 }
@@ -1209,9 +1203,9 @@ bool RenderManager::Draw(RenderInfo &Info)
     DoTransforms(Info, Options);
 
 	if (IsBulletDrawCall(Info)) {
-		int prim_count = Info.PrimitiveCount;
+		int numPrimitives = Info.PrimitiveCount;
 		TriListVertex *vs = (TriListVertex *)Info.UserVertexData;
-		g_Context->Managers.Bullet.LoadBulletsFromCall(prim_count, vs, Info);
+		g_Context->Managers.Bullet.LoadBulletsFromCall(numPrimitives, vs, Info, g_Context->Controller.FrameIndex());
 		if (g_ReportingEvents) {
 			g_Context->Files.Thought << "BULLETS IN FRAME " << g_Context->Controller.FrameIndex() << endl;
 			g_Context->Managers.Bullet.PrintAllBullets(g_Context->Files.Thought);
@@ -1241,7 +1235,6 @@ bool RenderManager::Draw(RenderInfo &Info)
     }
 
     _FrameRenderIndex++;
-
     
     return RenderHighlighted;
 }

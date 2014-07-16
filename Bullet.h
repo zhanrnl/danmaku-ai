@@ -38,6 +38,7 @@ public:
 	~Bullet();
 
 	void Print(ofstream &s);
+	bool IsDeadly();
 
 };
 
