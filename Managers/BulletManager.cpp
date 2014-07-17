@@ -89,7 +89,7 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	int numPrimitives = info.PrimitiveCount;
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
-	for (int i = 0; i < numPrimitives; i+=2) {
+	for (int i = 0; i < numPrimitives - 1; i+=2) {
 		Bullet *b;
 		try {
 			b = new Bullet(&vs[i * 3], info);
@@ -124,12 +124,16 @@ void BulletManager::EndFrame() {
 
 	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
 	g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelStatus);
-	if (bullets.size() > bulletsHWM) bulletsHWM = bullets.size();
-	if (comps > compsHWM) compsHWM = comps;
+	if (bullets.size() > bulletsHWM) {
+		bulletsHWM = bullets.size();
+	}
+	if (comps > compsHWM) {
+		compsHWM = comps;
+	}
 	g_Context->WriteConsole(String("Bullets HWM: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
 	g_Context->WriteConsole(String("Comps HWM: ") + String(compsHWM), RGBColor::Cyan, OverlayPanelStatus);
 	comps = 0;
-	PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
+	//PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
 }
 
 BulletManager::BulletManager() {}

@@ -10,10 +10,10 @@ const float ORTHOGONAL_SPEED_UNFOCUSED = 4;
 
 const float EPSILON = 0.00001f;
 
-const float LOW_Y = 47.5;
-const float HIGH_Y = 447.5;
-const float LOW_X = 39.5;
-const float HIGH_X = 407.5;
+const float LOW_Y = 50.0;// 47.5;
+const float HIGH_Y = 440.0; // 447.5;
+const float LOW_X = 50.0;// 39.5;
+const float HIGH_X = 400.0;// 407.5;
 
 enum LeftRightMovement {
 	LEFT_RIGHT_NONE,
@@ -103,13 +103,21 @@ float UtilityFromBullet(const Bullet *b, Vec2f position) {
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
-	return min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters));
+	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters));
+
+	currentUtility += - 1 / (b->center - position).LengthSq();
+
+	return currentUtility;
 }
 
 void PlayerManager::EndFrame() {
-	return;
-
 	Vec2f characterPosition = g_Context->Managers.Character.getPosition();
+
+	if (characterPosition.x == CharacterManager::NO_POSITION.x &&
+		characterPosition.y == CharacterManager::NO_POSITION.y) {
+		return;
+	}
+
 	const vector<Bullet *> bullets = g_Context->Managers.Bullet.getBullets();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
@@ -179,5 +187,5 @@ void PlayerManager::EndFrame() {
 
 	bool shouldFocus = (bestFo == FOCUS);
 
-	//gameplay.move(movement, true, shouldFocus);
+	gameplay.move(movement, true, shouldFocus);
 }

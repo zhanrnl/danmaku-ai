@@ -52,9 +52,9 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">d3d9Callback</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <IncludePath>C:\Users\hackweek25\Downloads\Includes\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\hackweek25\Downloads\Libraries\Libraries;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\hackweek25\Downloads\D3D9CallbackSC2\Engine;$(SourcePath)</SourcePath>
+    <IncludePath>C:\Users\lennart\Downloads\Includes\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\lennart\Downloads\Libraries\Libraries;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Users\lennart\Downloads\D3D9CallbackSC2\Engine;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
