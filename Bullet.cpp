@@ -47,6 +47,14 @@ BulletType BulletTypeFor(UINT textureHash, float u, float v) {
 			bulletType = (BulletType)row;
 		}
 		break;
+	case POWERUP_HASH:
+		row = (int)((v + EPSILON) * 16);
+		if (row >= 9 && row < 13) {
+			bulletType = LARGE_FUZZY_BULLET;
+		}
+		else {
+			bulletType = NOT_DEADLY_BULLET;
+		}
 	}
 	return bulletType;
 }
@@ -85,7 +93,7 @@ void Bullet::Print(ofstream &s) {
 
 bool Bullet::IsDeadly() {
 	// TODO: update this.
-	return true;
+	return bulletType != NOT_DEADLY_BULLET;
 }
 
 // "Distance" function for evaluating possible frame-to-frame matches.

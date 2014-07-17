@@ -231,7 +231,7 @@ void ManagerController::FrameEnd()
         _TexturesSavedThisFrame = 0;
     }
 
-    if(_FrameStartTime - _LastWindowResizeTime >= 5.0f)
+    if(_FrameStartTime - _LastWindowResizeTime >= 1.0f)
     {
         _LastWindowResizeTime = _FrameStartTime;
         g_Context->Graphics.CheckWindowSize();
@@ -246,13 +246,13 @@ void ManagerController::FrameEnd()
             int BorderWidth = ScreenRect.right - ScreenRect.left - ClientRect.right;
             int BorderHeight = ScreenRect.bottom - ScreenRect.top - ClientRect.bottom;
             
-            UINT NewWindowWidth = 1024;
-            UINT NewWindowHeight = 768;
+            UINT NewWindowWidth = 1600;
+            UINT NewWindowHeight = 1200;
 
             if(g_Context->Parameters.VideoCaptureMode)
-            {
-                NewWindowWidth = 1280;
-                NewWindowHeight = 720;
+			{
+				NewWindowWidth = 1600;
+				NewWindowHeight = 1200;
             }
             MoveWindow(Window, ScreenRect.left, ScreenRect.top, NewWindowWidth + BorderWidth, NewWindowHeight + BorderHeight, TRUE);
         }

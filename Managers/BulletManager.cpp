@@ -4,7 +4,7 @@
 
 #include <float.h>
 
-float GetBulletDistanceSquared(Bullet b1, Bullet b2) {
+float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
 
 	return (b1.center - b2.center).LengthSq();
 }
@@ -26,8 +26,8 @@ void BulletManager::UpdateBullets() {
 	}
 
 	for (UINT i = 0; i < bullets.size(); i++) {
-		int x = static_cast<int>(bullets[i].center.x * GRID / (float)SCREEN_WIDTH);
-		int y = static_cast<int>(bullets[i].center.y * GRID / (float)SCREEN_HEIGHT);
+		int x = static_cast<int>(bullets[i]->center.x * GRID / (float)SCREEN_WIDTH);
+		int y = static_cast<int>(bullets[i]->center.y * GRID / (float)SCREEN_HEIGHT);
 
 		if (IsValidBucket(x, y)) {
 			buckets[x][y].push_back(bullets[i]);
@@ -36,7 +36,7 @@ void BulletManager::UpdateBullets() {
 
 	int comps = 0;
 	for (UINT i = 0; i < prevBullets.size(); i++) {
-		Bullet b = prevBullets[i];
+		const Bullet &b = *prevBullets[i];
 
 		// Do our best to match the bullet.
 		float bestDistanceSquared = FLT_MAX;
@@ -51,14 +51,14 @@ void BulletManager::UpdateBullets() {
 					continue;
 				}
 
-				for (Bullet currentBullet : buckets[x + dx][y + dy]) {
-					if (b.bulletType != currentBullet.bulletType) {
+				for (Bullet *currentBullet : buckets[x + dx][y + dy]) {
+					if (b.bulletType != currentBullet->bulletType) {
 						continue;
 					}
-					float distanceSquared = GetBulletDistanceSquared(b, currentBullet);
+					float distanceSquared = GetBulletDistanceSquared(b, *currentBullet);
 					if (distanceSquared < bestDistanceSquared) {
 						distanceSquared = bestDistanceSquared;
-						bestBullet = &currentBullet;
+						bestBullet = currentBullet;
 					}
 					comps++;
 				}
@@ -66,22 +66,20 @@ void BulletManager::UpdateBullets() {
 		}
 
 		if (bestBullet != NULL) {
-			bestBullet->velocity = b.center - bestBullet->center;
+			bestBullet->velocity = bestBullet->center - b.center;
+			//g_Context->WriteConsole(String("BVelocity: ") + String(bestBullet->velocity.Length()), RGBColor::Green, OverlayPanelSystem);
 		}
 	}
-	g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelSystem);
+	//g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelSystem);
 }
 
-void BulletManager::LoadBulletsFromCall(RenderInfo &info, UINT frameIndex) {
+void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	int numPrimitives = info.PrimitiveCount;
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
-	if (frameIndex != currentFrameIndex) {
-		prevBullets = move(bullets);
-	}
 	for (int i = 0; i < numPrimitives / 2; i++) {
-		Bullet b = Bullet(&vs[i * 6], info);
-		if (b.IsDeadly()) {
+		Bullet *b = new Bullet(&vs[i * 6], info);
+		if (b->IsDeadly()) {
 			bullets.push_back(b);
 		}
 	}
@@ -90,9 +88,19 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info, UINT frameIndex) {
 }
 
 void BulletManager::PrintAllBullets(ofstream &s) {
-	for (Bullet b : bullets) {
-		b.Print(s);
+	for (Bullet *b : bullets) {
+		b->Print(s);
 	}
+}
+
+void BulletManager::EndFrame() {
+	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
+	PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
+
+	for (const Bullet *b : prevBullets) {
+		delete b;
+	}
+	prevBullets = move(bullets);
 }
 
 BulletManager::BulletManager() {}
