@@ -52,9 +52,9 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">d3d9Callback</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <IncludePath>C:\Users\lennart\Downloads\Includes\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\lennart\Downloads\Libraries\Libraries;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\lennart\Downloads\D3D9CallbackSC2\Engine;$(SourcePath)</SourcePath>
+    <IncludePath>C:\Users\hackweek25\Downloads\Includes\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\hackweek25\Downloads\Libraries\Libraries;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Users\hackweek25\Downloads\D3D9CallbackSC2\Engine;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
@@ -192,13 +192,6 @@
     <ClInclude Include="Threads\AIThread.h" />
     <ClInclude Include="Threads\Strats.h" />
     <ClInclude Include="TouhouConstants.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\SC2AIData\Parameters\AIParameters.txt" />
-    <None Include="..\..\..\..\SC2AIData\Parameters\WrapperParameters.txt" />
-    <None Include="..\..\..\..\SC2AIData\Personas\AI.txt" />
-    <None Include="..\..\..\..\SC2AIData\Personas\TrappedAI.txt" />
-    <None Include="Scrap.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

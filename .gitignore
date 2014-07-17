@@ -38,3 +38,6 @@ Icon
 *.opensdf
 DebugDLL
 ipch
+*.sdf
+*.opensdf
+*.user
