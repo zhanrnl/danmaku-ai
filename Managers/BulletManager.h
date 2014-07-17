@@ -12,6 +12,7 @@ public:
 		return bullets;
 	}
 
+	void StartFrame();
 	void EndFrame();
 
 private:

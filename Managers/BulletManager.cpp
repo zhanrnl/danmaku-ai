@@ -77,14 +77,19 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	int numPrimitives = info.PrimitiveCount;
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
+	bool addedBullets = false;
+
 	for (int i = 0; i < numPrimitives / 2; i++) {
 		Bullet *b = new Bullet(&vs[i * 6], info);
 		if (b->IsDeadly()) {
 			bullets.push_back(b);
+			addedBullets = true;
 		}
 	}
 
-	UpdateBullets();
+	if (addedBullets) {
+		UpdateBullets();
+	}
 }
 
 void BulletManager::PrintAllBullets(ofstream &s) {
@@ -93,14 +98,16 @@ void BulletManager::PrintAllBullets(ofstream &s) {
 	}
 }
 
-void BulletManager::EndFrame() {
-	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
-	PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
-
+void BulletManager::StartFrame() {
 	for (const Bullet *b : prevBullets) {
 		delete b;
 	}
 	prevBullets = move(bullets);
+}
+
+void BulletManager::EndFrame() {
+	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
+	PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
 }
 
 BulletManager::BulletManager() {}

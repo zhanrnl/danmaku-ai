@@ -10,6 +10,11 @@ const float ORTHOGONAL_SPEED_UNFOCUSED = 4;
 
 const float EPSILON = 0.00001f;
 
+const float LOW_Y = 47.5;
+const float HIGH_Y = 447.5;
+const float LOW_X = 39.5;
+const float HIGH_X = 407.5;
+
 enum LeftRightMovement {
 	LEFT_RIGHT_NONE,
 	LEFT,
@@ -50,9 +55,15 @@ Vec2f GetNextPosition(Vec2f currentPosition, LeftRightMovement lrm, UpDownMoveme
 	switch (udm) {
 	case UP:
 		prospectivePosition += Vec2f(0, -speed);
+		if (prospectivePosition.y < LOW_Y) {
+			prospectivePosition.y = LOW_Y;
+		}
 		break;
 	case DOWN:
 		prospectivePosition += Vec2f(0, speed);
+		if (prospectivePosition.y > HIGH_Y) {
+			prospectivePosition.y = HIGH_Y;
+		}
 		break;
 	default:
 		break;
@@ -61,9 +72,15 @@ Vec2f GetNextPosition(Vec2f currentPosition, LeftRightMovement lrm, UpDownMoveme
 	switch (lrm) {
 	case LEFT:
 		prospectivePosition += Vec2f(-speed, 0);
+		if (prospectivePosition.x < LOW_X) {
+			prospectivePosition.x = LOW_X;
+		}
 		break;
 	case RIGHT:
 		prospectivePosition += Vec2f(speed, 0);
+		if (prospectivePosition.x > HIGH_X) {
+			prospectivePosition.x = HIGH_X;
+		}
 		break;
 	default:
 		break;
@@ -160,5 +177,5 @@ void PlayerManager::EndFrame() {
 
 	bool shouldFocus = (bestFo == FOCUS);
 
-	//gameplay.move(movement, true, shouldFocus);
+	gameplay.move(movement, true, shouldFocus);
 }
