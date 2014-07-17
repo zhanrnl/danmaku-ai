@@ -41,3 +41,6 @@ ipch
 *.sdf
 *.opensdf
 *.user
+*.suo
+*.vcxproj
+*.sln
