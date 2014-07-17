@@ -5,7 +5,11 @@ const float EPSILON = 0.00001f;
 const Vec2f BOMB_COUNT_POSITION = Vec2f(513.5, 127.5);
 const Vec2f STAR_UV = Vec2f(0.96875, 0);
 
-CharacterManager::CharacterManager() {}
+const Vec2f CharacterManager::NO_POSITION = Vec2f(-1, -1);
+
+CharacterManager::CharacterManager() {
+	position = NO_POSITION;
+}
 
 CharacterManager::~CharacterManager() {}
 

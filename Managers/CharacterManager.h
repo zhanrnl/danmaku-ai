@@ -4,6 +4,7 @@ class CharacterManager :
 	public Manager
 {
 public:
+	static const Vec2f NO_POSITION;
 	Vec2f getPosition() {
 		return position;
 	}

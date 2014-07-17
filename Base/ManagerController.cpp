@@ -246,13 +246,13 @@ void ManagerController::FrameEnd()
             int BorderWidth = ScreenRect.right - ScreenRect.left - ClientRect.right;
             int BorderHeight = ScreenRect.bottom - ScreenRect.top - ClientRect.bottom;
             
-            UINT NewWindowWidth = 1600;
-            UINT NewWindowHeight = 1200;
+            UINT NewWindowWidth = 1024;
+            UINT NewWindowHeight = 768;
 
             if(g_Context->Parameters.VideoCaptureMode)
 			{
-				NewWindowWidth = 1600;
-				NewWindowHeight = 1200;
+				NewWindowWidth = 1024;
+				NewWindowHeight = 768;
             }
             MoveWindow(Window, ScreenRect.left, ScreenRect.top, NewWindowWidth + BorderWidth, NewWindowHeight + BorderHeight, TRUE);
         }
