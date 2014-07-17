@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 
 enum BulletType {
 	LARGE_STAR_BULLET,
@@ -48,3 +49,6 @@ public:
 
 };
 
+class BulletOffScreenException : public exception {
+
+};

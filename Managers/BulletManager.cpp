@@ -4,8 +4,13 @@
 
 #include <float.h>
 
-float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
+const float EXCLUDE_OUTSIDE_RADIUS = 250.f;
 
+bool ShouldIgnoreBullet(const Bullet &b) {
+	return (b.center - g_Context->Managers.Character.getPosition()).LengthSq() > EXCLUDE_OUTSIDE_RADIUS * EXCLUDE_OUTSIDE_RADIUS;
+}
+
+float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
 	return (b1.center - b2.center).LengthSq();
 }
 
@@ -40,6 +45,10 @@ void BulletManager::UpdateBullets() {
 
 	for (UINT i = 0; i < prevBullets.size(); i++) {
 		const Bullet &b = *prevBullets[i];
+
+		if (ShouldIgnoreBullet(b)) {
+			continue;
+		}
 
 		// Do our best to match the bullet.
 		float bestDistanceSquared = FLT_MAX;
@@ -80,9 +89,15 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	int numPrimitives = info.PrimitiveCount;
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
-	for (int i = 0; i < numPrimitives / 2; i++) {
-		Bullet *b = new Bullet(&vs[i * 6], info);
-		if (b->IsDeadly()) {
+	for (int i = 0; i < numPrimitives; i+=2) {
+		Bullet *b;
+		try {
+			b = new Bullet(&vs[i * 3], info);
+		}
+		catch (BulletOffScreenException ex) {
+			i += 1;
+		}
+		if (b->IsDeadly() && !ShouldIgnoreBullet(*b)) {
 			bullets.push_back(b);
 		}
 		else {

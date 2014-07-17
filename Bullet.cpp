@@ -65,8 +65,9 @@ Bullet::Bullet(TriListVertex *vertices, RenderInfo info) {
 	TriListVertex lower_left_list = vertices[2];
 	TriListVertex lower_right_list = vertices[5];
 
-	DebugOnlyAssert(vertices[3].p == upper_right_list.p, "We didn't find a full rectangle");
-	DebugOnlyAssert(vertices[4].p == lower_left_list.p, "We didn't find a full RECTANGLE");
+	if (!(vertices[3].p == upper_right_list.p && vertices[4].p == lower_left_list.p)) {
+		throw BulletOffScreenException();
+	}
 
 	Vec2f upper_left = Vec2f(upper_left_list.p.x, upper_left_list.p.y);
 	Vec2f upper_right = Vec2f(upper_right_list.p.x, upper_right_list.p.y);
