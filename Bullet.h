@@ -39,10 +39,6 @@ public:
 	Bullet(TriListVertex *vertices, RenderInfo info);
 	~Bullet();
 
-
-	Bullet(const Bullet &b);
-	Bullet &operator=(const Bullet &b);
-
 	void Print(ofstream &s);
 	bool IsDeadly();
 	float DistanceTo(const Bullet &other);

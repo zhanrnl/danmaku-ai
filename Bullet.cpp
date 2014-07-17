@@ -93,7 +93,7 @@ Bullet::Bullet(TriListVertex *vertices, RenderInfo info) {
 Bullet::~Bullet() {}
 
 void Bullet::Print(ofstream &s) {
-	s << "Position {" << center.x << ", " << center.y << "}  Dimensions {" << dimensions.x << ", " << dimensions.y << "}  Rotation " << rotation << "  Type {" << bulletType << "}" << endl;
+	s << "Position {" << center.x << ", " << center.y << "}  Dimensions {" << dimensions.x << ", " << dimensions.y << "}  Velocity {" << velocity.x << ", " << velocity.y << "}  Type {" << bulletType << "}" << endl;
 }
 
 bool Bullet::IsDeadly() {
