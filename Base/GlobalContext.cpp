@@ -7,8 +7,12 @@
 
 #include "Main.h"
 
+#define ULTRA_FAST
+
 #ifndef ULTRA_FAST
 bool g_ReportingEvents = true;
+#else
+bool g_ReportingEvents = false;
 #endif
 
 GlobalContext *g_Context;

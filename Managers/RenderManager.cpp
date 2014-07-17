@@ -1159,13 +1159,8 @@ void PrintVertex(TriListVertex &v) {
 
 bool IsBulletDrawCall(RenderInfo &Info) {
 	UINT bmpHash = Info.Texture0->BmpHash();
-	//TriListVertex *vs = (TriListVertex *)Info.UserVertexData;
-	//int row = (int)((vs[0].uv.y + EPSILON) * 16);
 	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && 
-		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH || 
-			(bmpHash == POWERUP_HASH)
-			//(bmpHash == POWERUP_HASH && row >= 9 && row < 13)
-		);
+		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH || bmpHash == POWERUP_HASH);
 }
 
 bool IsCharacterDrawCall(RenderInfo &Info) {
@@ -1224,13 +1219,13 @@ bool RenderManager::Draw(RenderInfo &Info)
 	if (IsBulletDrawCall(Info)) {
 		g_Context->Managers.Bullet.LoadBulletsFromCall(Info);
 		if (g_ReportingEvents) {
-			g_Context->Files.CurrentFrameRenderEvents << "DEBUG BULLETS" << endl;
+			g_Context->Files.CurrentFrameAllEvents << "DEBUG BULLETS" << endl;
 			TriListVertex *vs = (TriListVertex *)Info.UserVertexData;
 			for (UINT i = 0; i < Info.NumVertices * 3; i += 6) {
-				g_Context->Files.CurrentFrameRenderEvents << "    " << vs[i].p.x << " " << vs[i].p.y << endl;
+				g_Context->Files.CurrentFrameAllEvents << "    " << vs[i].p.x << " " << vs[i].p.y << endl;
 			}
-			g_Context->Files.CurrentFrameRenderEvents << "BULLETS IN FRAME " << g_Context->Controller.FrameIndex() << endl;
-			g_Context->Managers.Bullet.PrintAllBullets(g_Context->Files.CurrentFrameRenderEvents);
+			g_Context->Files.CurrentFrameAllEvents << "BULLETS IN FRAME " << g_Context->Controller.FrameIndex() << endl;
+			g_Context->Managers.Bullet.PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
 		}
 	}
 

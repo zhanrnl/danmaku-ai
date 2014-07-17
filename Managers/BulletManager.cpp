@@ -9,6 +9,10 @@ float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
 	return (b1.center - b2.center).LengthSq();
 }
 
+float GetDistanceSquared(const Vec2f &l1, const Vec2f &l2) {
+	return (l1 - l2).LengthSq();
+}
+
 bool BulletManager::IsValidBucket(int x, int y) {
 	return 0 <= x && x < GRID && 0 <= y && y < GRID;
 }
@@ -34,7 +38,6 @@ void BulletManager::UpdateBullets() {
 		}
 	}
 
-	int comps = 0;
 	for (UINT i = 0; i < prevBullets.size(); i++) {
 		const Bullet &b = *prevBullets[i];
 
@@ -55,7 +58,7 @@ void BulletManager::UpdateBullets() {
 					if (b.bulletType != currentBullet->bulletType) {
 						continue;
 					}
-					float distanceSquared = GetBulletDistanceSquared(b, *currentBullet);
+					float distanceSquared = GetDistanceSquared(currentBullet->center, b.center + b.velocity);
 					if (distanceSquared < bestDistanceSquared) {
 						distanceSquared = bestDistanceSquared;
 						bestBullet = currentBullet;
@@ -77,18 +80,14 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	int numPrimitives = info.PrimitiveCount;
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
-	bool addedBullets = false;
-
 	for (int i = 0; i < numPrimitives / 2; i++) {
 		Bullet *b = new Bullet(&vs[i * 6], info);
 		if (b->IsDeadly()) {
 			bullets.push_back(b);
-			addedBullets = true;
 		}
-	}
-
-	if (addedBullets) {
-		UpdateBullets();
+		else {
+			delete b;
+		}
 	}
 }
 
@@ -106,7 +105,15 @@ void BulletManager::StartFrame() {
 }
 
 void BulletManager::EndFrame() {
+	UpdateBullets();
+
 	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelStatus);
+	if (bullets.size() > bulletsHWM) bulletsHWM = bullets.size();
+	if (comps > compsHWM) compsHWM = comps;
+	g_Context->WriteConsole(String("Bullets HWM: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Comps HWM: ") + String(compsHWM), RGBColor::Cyan, OverlayPanelStatus);
+	comps = 0;
 	PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
 }
 

@@ -103,10 +103,12 @@ float UtilityFromBullet(const Bullet *b, Vec2f position) {
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
-	return -1.0f / (perpendicularVector.Length() * timeTillMatters);
+	return min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters));
 }
 
 void PlayerManager::EndFrame() {
+	return;
+
 	Vec2f characterPosition = g_Context->Managers.Character.getPosition();
 	const vector<Bullet *> bullets = g_Context->Managers.Bullet.getBullets();
 
@@ -177,5 +179,5 @@ void PlayerManager::EndFrame() {
 
 	bool shouldFocus = (bestFo == FOCUS);
 
-	gameplay.move(movement, true, shouldFocus);
+	//gameplay.move(movement, true, shouldFocus);
 }

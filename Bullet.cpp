@@ -75,6 +75,10 @@ Bullet::Bullet(TriListVertex *vertices, RenderInfo info) {
 
 	Vec2f upperside = upper_right - upper_left;
 	center = (upper_left + lower_right) / 2.0;
+	//if (floor(center.x * 2 + 2 * EPSILON) >= EPSILON ||
+	//	floor(center.y * 2 + 2 * EPSILON) >= EPSILON) {
+	//	g_Context->WriteConsole(String("Non-aligned bullet:") + String(center.x) + String(",") + String(center.y), RGBColor::Green, OverlayPanelStatus);
+	//}
 	dimensions = Vec2f(upperside.Length(), (upper_left - lower_left).Length());
 
 	rotation = atan2(upperside.y, upperside.x);
@@ -92,19 +96,5 @@ void Bullet::Print(ofstream &s) {
 }
 
 bool Bullet::IsDeadly() {
-	// TODO: update this.
 	return bulletType != NOT_DEADLY_BULLET;
-}
-
-// "Distance" function for evaluating possible frame-to-frame matches.
-// Returns square of distance so we don't have to take a square root.
-float Bullet::DistanceTo(const Bullet &other) {
-	if (bulletType != other.bulletType)
-		return FLT_MAX;
-	float squaredSum = (center - other.center).LengthSq();
-	float dRot = rotation - other.rotation;
-	while (dRot >= Math::PI) dRot -= float(2 * Math::PI);
-	while (dRot < -Math::PI) dRot += float(2 * Math::PI);
-	squaredSum += dRot * dRot * DISTANCE_ROT_SCALE;
-	return squaredSum;
 }

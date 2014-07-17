@@ -32,38 +32,50 @@ void Gameplay::move(int direction, bool shoot, bool focus) {
 
     if ((direction & DIRECTION_LEFT) && !left_pressed) {
         make_key_event(KEYCODE_LEFT);
+		left_pressed = true;
     } else if (!(direction & DIRECTION_LEFT) && left_pressed) {
         make_key_event(KEYCODE_LEFT, false);
+		left_pressed = false;
     }
 
     if ((direction & DIRECTION_RIGHT) && !right_pressed) {
         make_key_event(KEYCODE_RIGHT);
+		right_pressed = true;
     } else if (!(direction & DIRECTION_RIGHT) && right_pressed) {
         make_key_event(KEYCODE_RIGHT, false);
+		right_pressed = false;
     }
 
     if ((direction & DIRECTION_UP) && !up_pressed) {
         make_key_event(KEYCODE_UP);
+		up_pressed = true;
     } else if (!(direction & DIRECTION_UP) && up_pressed) {
         make_key_event(KEYCODE_UP, false);
+		up_pressed = false;
     }
 
     if ((direction & DIRECTION_DOWN) && !down_pressed) {
         make_key_event(KEYCODE_DOWN);
+		down_pressed = true;
     } else if (!(direction & DIRECTION_DOWN) && down_pressed) {
         make_key_event(KEYCODE_DOWN, false);
+		down_pressed = false;
     }
 
     if (shoot && !z_pressed) {
         make_key_event(KEYCODE_Z);
+		z_pressed = true;
     } else if (!shoot && z_pressed) {
         make_key_event(KEYCODE_Z, false);
+		z_pressed = false;
     }
 
     if (focus && !shift_pressed) {
         make_key_event(KEYCODE_SHIFT);
+		shift_pressed = true;
     } else if (!focus && shift_pressed) {
         make_key_event(KEYCODE_SHIFT, false);
+		shift_pressed = false;
     }
 }
 
