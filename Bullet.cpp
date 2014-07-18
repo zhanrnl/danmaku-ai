@@ -55,6 +55,30 @@ BulletType BulletTypeFor(UINT textureHash, float u, float v) {
 		else {
 			bulletType = NOT_DEADLY_BULLET;
 		}
+		break;
+	case ENEMY_HASH:
+		bulletType = ENEMY;
+		break;
+	case MOMIZI_HASH:
+		row = (int)((v + EPSILON) * 8);
+		if (row == 2) {
+			bulletType = ENEMY;
+			break;
+		}
+		else if (row > 2) {
+			bulletType = NOT_DEADLY_BULLET;
+			break;
+		}
+	case SHIZUHA_MINORIKO_HASH:
+	case HINA_HASH			  :
+	case NITORI1_HASH		  :
+	case NITORI2_HASH		  :
+	case AYA_HASH			  :
+	case SANAE_HASH			  :
+	case KANAKO_HASH		  :
+	case SUWAKO_HASH		  :
+		bulletType = BOSS;
+		break;
 	}
 	return bulletType;
 }
@@ -98,4 +122,12 @@ void Bullet::Print(ofstream &s) {
 
 bool Bullet::IsDeadly() {
 	return bulletType != NOT_DEADLY_BULLET;
+}
+
+bool Bullet::IsEnemy() {
+	return bulletType == ENEMY || bulletType == BOSS;
+}
+
+bool Bullet::IsBoss() {
+	return bulletType == BOSS;
 }
