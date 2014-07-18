@@ -38,7 +38,7 @@ void CharacterManager::UpdateIsDeadFromCall(RenderInfo &info) {
 
 		Vec4f center4d = (upper_left.p + lower_right.p) / 2;
 		Vec2f center = Vec2f(center4d.x, center4d.y);
-		if ((center - position).LengthSq() <= 36) {
+		if ((center - position).LengthSq() <= 17) {
 			int col = (int)((EPSILON + upper_left.uv.x) * 16);
 			int row = (int)((EPSILON + upper_left.uv.y) * 16);
 

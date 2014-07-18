@@ -18,8 +18,6 @@ const float HIGH_X = 407.5;
 
 const float COLLIDE_WITH_BULLET = -1000.0;
 
-const float BOMB_THRESHOLD = -30000.0;
-
 enum LeftRightMovement {
 	LEFT_RIGHT_NONE,
 	LEFT,
@@ -211,7 +209,7 @@ void PlayerManager::EndFrame() {
 	}
 	g_Context->WriteConsole(String("Utility LWM: ") + String(utilityLWM), RGBColor::Cyan, OverlayPanelStatus);
 
-	if (bestUtility <= BOMB_THRESHOLD && bombs > 0) {
+	if (g_Context->Managers.Character.getWasDead() && bombs > 0) {
 		gameplay.bomb();
 		return;
 	}
@@ -219,7 +217,7 @@ void PlayerManager::EndFrame() {
 	// Send the output
 	int movement = 0;
 
-	switch (bestLrm) {
+	switch (bestLrm) { 
 	case LEFT:
 		movement |= DIRECTION_LEFT;
 		break;
@@ -243,7 +241,7 @@ void PlayerManager::EndFrame() {
 
 	bool shouldFocus = (bestFo == FOCUS);
 
-	//gameplay.move(movement, true, shouldFocus);
+	gameplay.move(movement, true, shouldFocus);
 
 	if (slowMode) {
 		Sleep(50);
