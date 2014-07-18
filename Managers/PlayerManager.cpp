@@ -134,17 +134,30 @@ float UtilityFromBullet(const Bullet &b, Vec2f position) {
 }
 
 float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
+	float utility = 0.0f;
 	switch (p.powerupType) {
 	case POWER:
+		utility = 0.01f;
+		break;
 	case POWER_LARGE:
+		utility = 0.2f;
+		break;
 	case ONE_UP:
+		utility = 1.0f;
+		break;
 	//case SCORE_BLUE:
 	//case SCORE_BLUE_LARGE:
 		break;
 	default:
 		return 0.0f;
 	}
-	return -0.01f * (position - p.center).LengthSq();
+
+	float lengthSquared = (position - p.center).LengthSq();
+
+	if (lengthSquared < 1000) {
+		return -utility * pow(lengthSquared, 0.25);
+	}
+	return -utility * lengthSquared;
 }
 
 void PlayerManager::EndFrame() {
