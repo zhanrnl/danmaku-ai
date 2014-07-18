@@ -39,7 +39,6 @@ enum FocusOptions {
 };
 
 PlayerManager::PlayerManager() : gameplay(), utilityLWM(0), slowMode(false), noShoot(false) {
-	
 }
 
 PlayerManager::~PlayerManager() {
@@ -103,9 +102,9 @@ float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f pos
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
 	if (perpendicularVector.Length() > 10) return 0;
-	if (timeTillMatters > 10 || timeTillMatters < -2) return 0;
+	if (timeTillMatters > 10 || timeTillMatters < -3) return 0;
 
-	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * pow(timeTillMatters, 2)));
+	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters * timeTillMatters));
 
 	float smallerDimension = min(b.dimensions.x, b.dimensions.y) / 2.0f;
 	float distanceToBullet = (bulletPosition - position).Length();
@@ -194,9 +193,13 @@ void PlayerManager::EndFrame() {
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
 
+	closeBullets.clear();
+
 	for (int lrm = 0; lrm < NUM_LEFT_RIGHT; lrm++) {
 		for (int udm = 0; udm < NUM_UP_DOWN; udm++) {
 			for (int fo = 0; fo < NUM_FOCUS_OPTIONS; fo++) {
+				if (lrm == 0 && udm == 0 && fo != 0) continue; // don't need to check both focused and unfocused not moving
+
 				utilities[lrm][udm][fo] = 0.0;
 
 				Vec2f nextPosition = GetNextPosition(characterPosition,
@@ -204,8 +207,20 @@ void PlayerManager::EndFrame() {
 					static_cast<UpDownMovement>(udm),
 					static_cast<FocusOptions>(fo));
 
-				for (const Bullet b : bullets) {
-					utilities[lrm][udm][fo] += GetBulletWeight(b) * UtilityFromBullet(b, nextPosition);
+				if (lrm == 0 && udm == 0) {
+					for (Bullet b : bullets) {
+						if ((b.center - characterPosition).LengthSq() < 300.f * 300.f) {
+							closeBullets.push_back(b);
+							float u = GetBulletWeight(b) * UtilityFromBullet(b, nextPosition);
+							utilities[lrm][udm][fo] += u;
+						}
+					}
+				}
+				else {
+					for (Bullet b : closeBullets) {
+						float u = GetBulletWeight(b) * UtilityFromBullet(b, nextPosition);
+						utilities[lrm][udm][fo] += u;
+					}
 				}
 
 				for (const Powerup p : powerups) {

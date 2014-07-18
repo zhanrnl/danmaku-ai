@@ -17,4 +17,5 @@ public:
 private:
 	Gameplay gameplay;
 	float utilityLWM;
+	vector<Bullet> closeBullets;
 };
