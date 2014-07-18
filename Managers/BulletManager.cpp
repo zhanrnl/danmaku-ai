@@ -60,10 +60,12 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 			}
 			if (b.IsEnemy()) {
 				numEnemies++;
+				bullets.push_back(b);
 			}
 			if (b.IsBoss()) {
 				bossExists = true;
 				bossLocation = b.center;
+				bullets.push_back(b);
 			}
 		}
 		catch (BulletOffScreenException ex) {
