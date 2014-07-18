@@ -16,6 +16,10 @@ Gameplay::~Gameplay() {
 }
 
 void Gameplay::move(int direction, bool shoot, bool focus) {
+	if (x_pressed) {
+		make_key_event(KEYCODE_X, false);
+		x_pressed = false;
+	}
     // Make sure the direction keys are set correctly.
     bool is_valid = true;
     if ((direction & DIRECTION_LEFT) && (direction & DIRECTION_RIGHT)) {
@@ -80,7 +84,10 @@ void Gameplay::move(int direction, bool shoot, bool focus) {
 }
 
 void Gameplay::bomb() {
-    make_key_tap(KEYCODE_X);
+	if (!x_pressed) {
+		make_key_event(KEYCODE_X);
+		x_pressed = true;
+	}
 }
 
 void Gameplay::skip_dialog() {
