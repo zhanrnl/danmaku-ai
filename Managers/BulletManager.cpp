@@ -58,6 +58,13 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 			if (b.IsDeadly()) {
 				bullets.push_back(b);
 			}
+			if (b.IsEnemy()) {
+				numEnemies++;
+			}
+			if (b.IsBoss()) {
+				bossExists = true;
+				bossLocation = b.center;
+			}
 		}
 		catch (BulletOffScreenException ex) {
 			i -= 1;
@@ -71,18 +78,29 @@ void BulletManager::PrintAllBullets(ofstream &s) {
 	}
 }
 
+const Vec2f *BulletManager::getBossLocation() {
+	if (bossExists) {
+		return &bossLocation;
+	}
+	return NULL;
+}
+
 void BulletManager::StartFrame() {
 	prevBullets = move(bullets);
+	numEnemies = 0;
+	bossExists = false;
 }
 
 void BulletManager::EndFrame() {
 	UpdateBullets();
 
-	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size() - numEnemies), RGBColor::Green, OverlayPanelStatus);
 	if (bullets.size() > bulletsHWM) {
 		bulletsHWM = bullets.size();
 	}
-	g_Context->WriteConsole(String("Bullets HWM: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Max bullets: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Enemies: ") + String(numEnemies), RGBColor::Orange, OverlayPanelStatus);
+	g_Context->WriteConsole(String("Boss: ") + (bossExists ? (String(bossLocation.x) + String(", ") + String(bossLocation.y)) : String("none")), RGBColor::Orange, OverlayPanelStatus);
 
 #ifndef ULTRA_FAST
 	if (g_Context->Files.CurrentFrameAllEvents.is_open()) {
@@ -91,7 +109,6 @@ void BulletManager::EndFrame() {
 #endif
 }
 
-BulletManager::BulletManager() {
-}
+BulletManager::BulletManager() {}
 
 BulletManager::~BulletManager() {}

@@ -33,7 +33,7 @@ void ManagerController::Init()
     //_ManagerList.PushEnd(&g_Context->Managers.FrameUnit);
     //_ManagerList.PushEnd(&g_Context->Managers.FrameHUD);
     //_ManagerList.PushEnd(&g_Context->Managers.Minimap);
-    _ManagerList.PushEnd(&g_Context->Managers.KeyboardMouse);
+    //_ManagerList.PushEnd(&g_Context->Managers.KeyboardMouse);
     //_ManagerList.PushEnd(&g_Context->Managers.Knowledge);
     //_ManagerList.PushEnd(&g_Context->Managers.ControlGroup);
     //_ManagerList.PushEnd(&g_Context->Managers.Thought);

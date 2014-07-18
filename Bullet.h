@@ -25,6 +25,8 @@ enum BulletType {
 	SMALL_SHINY_CIRCLE_BULLET,
 	TINY_WHITE_BULLET,
 	TINY_COLORED_BULLET,
+	ENEMY,
+	BOSS,
 	NOT_DEADLY_BULLET
 };
 
@@ -41,6 +43,8 @@ public:
 
 	void Print(ofstream &s);
 	bool IsDeadly();
+	bool IsEnemy();
+	bool IsBoss();
 	float DistanceTo(const Bullet &other);
 
 };

@@ -1165,7 +1165,19 @@ void PrintVertex(TriListVertex &v) {
 bool IsBulletDrawCall(RenderInfo &Info) {
 	UINT bmpHash = Info.Texture0->BmpHash();
 	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 && 
-		(bmpHash == BULLETS1_HASH || bmpHash == BULLETS2_HASH || bmpHash == POWERUP_HASH);
+		(bmpHash == BULLETS1_HASH ||
+		 bmpHash == BULLETS2_HASH ||
+		 bmpHash == POWERUP_HASH ||
+		 bmpHash == ENEMY_HASH ||
+		 bmpHash == SHIZUHA_MINORIKO_HASH ||
+		 bmpHash == HINA_HASH ||
+		 bmpHash == NITORI1_HASH ||
+		 bmpHash == NITORI2_HASH ||
+		 bmpHash == MOMIZI_HASH ||
+		 bmpHash == AYA_HASH ||
+		 bmpHash == SANAE_HASH ||
+		 bmpHash == KANAKO_HASH ||
+		 bmpHash == SUWAKO_HASH);
 }
 
 bool IsCharacterDrawCall(RenderInfo &Info) {
