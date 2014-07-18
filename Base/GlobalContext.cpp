@@ -7,7 +7,7 @@
 
 #include "Main.h"
 
-//#define ULTRA_FAST
+#define ULTRA_FAST
 
 #ifndef ULTRA_FAST
 bool g_ReportingEvents = true;
