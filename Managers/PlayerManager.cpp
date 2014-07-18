@@ -93,15 +93,13 @@ Vec2f GetNextPosition(Vec2f currentPosition, LeftRightMovement lrm, UpDownMoveme
 
 float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f position) {
 	Vec2f bulletToPosition = position - bulletPosition;
-	Vec2f parallelVector = b.velocity * (Vec2f::Dot(bulletToPosition, b.velocity) / b.velocity.LengthSq());
-	Vec2f perpendicularVector = bulletToPosition - parallelVector;
-
-	float timeTillMatters = parallelVector.Length() / b.velocity.Length();
+	float timeTillMatters = (Vec2f::Dot(bulletToPosition, b.velocity) / b.velocity.LengthSq());
+	Vec2f perpendicularVector = bulletToPosition - b.velocity * timeTillMatters;
 	//g_Context->Files.CurrentFrameAllEvents << "BPosition: (" << b->center.x << "," << b->center.y << ") (" << b->velocity.x << "," << b->velocity.y << ")\n";
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
-	if (perpendicularVector.Length() > 10) return 0;
+	if (perpendicularVector.LengthSq() > 10.0f * 10.0f) return 0;
 	if (timeTillMatters > 10 || timeTillMatters < -3) return 0;
 
 	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters * timeTillMatters));

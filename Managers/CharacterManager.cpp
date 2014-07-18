@@ -42,12 +42,7 @@ void CharacterManager::UpdateIsDeadFromCall(RenderInfo &info) {
 			int col = (int)((EPSILON + upper_left.uv.x) * 16);
 			int row = (int)((EPSILON + upper_left.uv.y) * 16);
 
-			if (row == 1) {
-				dead |= (col == 8 || col == 12);
-			}
-			else if (row == 5) {
-				dead |= (col == 0 || col == 4);
-			}
+			dead |= (row == 1) && (col == 8);
 		}
 	}
 }
