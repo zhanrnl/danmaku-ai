@@ -127,14 +127,18 @@ float UtilityStaticBullet(const Bullet &b, Vec2f &p) {
 }
 
 float UtilityFromBullet(const Bullet &b, Vec2f position) {
-	if (b.velocity.LengthSq() < EPSILON) {
-		return 2.0f * UtilityStaticBullet(b, position);
+	if (b.velocity.LengthSq() < 0.25f) {
+		return 3.0f * UtilityStaticBullet(b, position);
 	}
 
 	Vec2f bulletPosition = b.center;// +b->velocity;
 	float currentUtility = 0.0;
 	currentUtility += UtilityFromBulletPosition(b, bulletPosition, position);
 	currentUtility += UtilityFromBulletPosition(b, bulletPosition + b.velocity, position);
+
+	if ((b.IsEnemy() || b.IsBoss()) && currentUtility < 0.f) {
+		currentUtility *= 3;
+	}
 
 	return currentUtility;
 }

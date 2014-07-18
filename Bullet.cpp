@@ -120,14 +120,14 @@ void Bullet::Print(ofstream &s) {
 	s << "Position {" << center.x << ", " << center.y << "}  Dimensions {" << dimensions.x << ", " << dimensions.y << "}  Velocity {" << velocity.x << ", " << velocity.y << "}  Type {" << bulletType << "}" << endl;
 }
 
-bool Bullet::IsDeadly() {
+bool Bullet::IsDeadly() const {
 	return bulletType != NOT_DEADLY_BULLET;
 }
 
-bool Bullet::IsEnemy() {
+bool Bullet::IsEnemy() const {
 	return bulletType == ENEMY || bulletType == BOSS;
 }
 
-bool Bullet::IsBoss() {
+bool Bullet::IsBoss() const {
 	return bulletType == BOSS;
 }

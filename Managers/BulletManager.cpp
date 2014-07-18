@@ -60,11 +60,15 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 			}
 			if (b.IsEnemy()) {
 				numEnemies++;
+				b.dimensions.x *= 1.5f;
+				b.dimensions.y *= 1.5f;
 				bullets.push_back(b);
 			}
 			if (b.IsBoss()) {
 				bossExists = true;
 				bossLocation = b.center;
+				b.dimensions.x *= 1.5f;
+				b.dimensions.y *= 1.5f;
 				bullets.push_back(b);
 			}
 		}

@@ -42,9 +42,9 @@ public:
 	~Bullet();
 
 	void Print(ofstream &s);
-	bool IsDeadly();
-	bool IsEnemy();
-	bool IsBoss();
+	bool IsDeadly() const;
+	bool IsEnemy() const;
+	bool IsBoss() const;
 	float DistanceTo(const Bullet &other);
 
 };
