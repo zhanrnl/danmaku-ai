@@ -65,6 +65,11 @@ void RenderManager::EndFrame()
         //Bitmap Minimap(MinimapDimensions.x, MinimapDimensions.y);
         //Bmp.BltTo(Minimap, 0, 0, MinimapTopLeft.x, Bmp.Height() - 1 - MinimapTopLeft.y - MinimapDimensions.y, MinimapDimensions.x, MinimapDimensions.y);
         //Minimap.SavePNG(g_Context->Parameters.ScreenCaptureDirectory + String("Frame") + String(g_Context->Controller.FrameIndex()) + String("Minimap.png"));
+
+		g_Context->Files.CurrentFrameAllEvents << "POWERUPS" << endl;
+		for (const Powerup p : g_Context->Managers.Powerup.getPowerups()) {
+			g_Context->Files.CurrentFrameAllEvents << p.center.x << " " << p.center.y << " " << p.powerupType << endl;
+		}
     }
 }
 
@@ -1175,6 +1180,12 @@ bool IsScoreDrawCall(RenderInfo &Info) {
 		(bmpHash == SCORE_HASH);
 }
 
+bool IsPowerupDrawCall(RenderInfo &Info) {
+	UINT bmpHash = Info.Texture0->BmpHash();
+	return Info.PrimitiveType == D3DPT_TRIANGLELIST && Info.PrimitiveCount % 2 == 0 &&
+		(bmpHash == POWERUP_HASH);
+}
+
 bool RenderManager::Draw(RenderInfo &Info)
 {
 	bool RenderHighlighted = false;
@@ -1240,6 +1251,10 @@ bool RenderManager::Draw(RenderInfo &Info)
 
 	if (IsScoreDrawCall(Info)) {
 		g_Context->Managers.Character.UpdateScoreFromCall(Info);
+	}
+
+	if (IsPowerupDrawCall(Info)) {
+		g_Context->Managers.Powerup.LoadPowerupsFromCall(Info);
 	}
 
     //

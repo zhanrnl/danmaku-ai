@@ -91,18 +91,18 @@ Vec2f GetNextPosition(Vec2f currentPosition, LeftRightMovement lrm, UpDownMoveme
 	return prospectivePosition;
 }
 
-float UtilityFromBullet(const Bullet *b, Vec2f position) {
-	if (b->velocity.LengthSq() < EPSILON) {
+float UtilityFromBullet(const Bullet &b, Vec2f position) {
+	if (b.velocity.LengthSq() < EPSILON) {
 		return 0;
 	}
 
-	Vec2f bulletPosition = b->center;// +b->velocity;
+	Vec2f bulletPosition = b.center;// +b->velocity;
 
 	Vec2f bulletToPosition = position - bulletPosition;
-	Vec2f parallelVector = b->velocity * (Vec2f::Dot(bulletToPosition, b->velocity) / b->velocity.LengthSq());
+	Vec2f parallelVector = b.velocity * (Vec2f::Dot(bulletToPosition, b.velocity) / b.velocity.LengthSq());
 	Vec2f perpendicularVector = bulletToPosition - parallelVector;
 
-	float timeTillMatters = parallelVector.Length() / b->velocity.Length();
+	float timeTillMatters = parallelVector.Length() / b.velocity.Length();
 	//g_Context->Files.CurrentFrameAllEvents << "BPosition: (" << b->center.x << "," << b->center.y << ") (" << b->velocity.x << "," << b->velocity.y << ")\n";
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
@@ -112,7 +112,7 @@ float UtilityFromBullet(const Bullet *b, Vec2f position) {
 
 	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * pow(timeTillMatters, 2)));
 
-	float smallerDimension = min(b->dimensions.x, b->dimensions.y) / 2.0f;
+	float smallerDimension = min(b.dimensions.x, b.dimensions.y) / 2.0f;
 	float distanceToBullet = (bulletPosition - position).Length();
 	if (distanceToBullet < smallerDimension) {
 		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension /  distanceToBullet));
@@ -133,7 +133,7 @@ void PlayerManager::EndFrame() {
 		return;
 	}
 
-	const vector<Bullet *> bullets = g_Context->Managers.Bullet.getBullets();
+	const vector<Bullet> bullets = g_Context->Managers.Bullet.getBullets();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
 
@@ -147,7 +147,7 @@ void PlayerManager::EndFrame() {
 					static_cast<UpDownMovement>(udm),
 					static_cast<FocusOptions>(fo));
 
-				for (const Bullet *b : bullets) {
+				for (const Bullet b : bullets) {
 					utilities[lrm][udm][fo] += UtilityFromBullet(b, nextPosition);
 				}
 				//g_Context->Files.CurrentFrameAllEvents << "Utilities: " << utilities[lrm][udm][fo] << endl;

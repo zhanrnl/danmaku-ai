@@ -4,10 +4,16 @@
 
 #include <float.h>
 
-const float EXCLUDE_OUTSIDE_RADIUS = 250.f;
+const float EPSILON = 0.00001f;
+const float EXCLUDE_ALL_RADIUS = 250.f; // all bullets outside of this radius around player are ignored
 
 bool ShouldIgnoreBullet(const Bullet &b) {
-	return (b.center - g_Context->Managers.Character.getPosition()).LengthSq() > EXCLUDE_OUTSIDE_RADIUS * EXCLUDE_OUTSIDE_RADIUS;
+	Vec2f d = g_Context->Managers.Character.getPosition() - b.center;
+	float distFromPlayerSq = d.LengthSq();
+	if (distFromPlayerSq > EXCLUDE_ALL_RADIUS * EXCLUDE_ALL_RADIUS) {
+		return true;
+	}
+	return false;
 }
 
 float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
@@ -18,71 +24,28 @@ float GetDistanceSquared(const Vec2f &l1, const Vec2f &l2) {
 	return (l1 - l2).LengthSq();
 }
 
-bool BulletManager::IsValidBucket(int x, int y) {
-	return 0 <= x && x < GRID && 0 <= y && y < GRID;
-}
-
 void BulletManager::UpdateBullets() {
-	if (bullets.size() <= 0) {
+	if (bullets.size() <= 0 || prevBullets.size() <= 0) {
 		return;
 	}
 
-	// Fill in the buckets.
-	for (int i = 0; i < GRID; i++) {
-		for (int j = 0; j < GRID; j++) {
-			buckets[i][j].clear();
+	KDTree3 kdTree = KDTree3();
+
+	Vector<Vec3f> vec = Vector<Vec3f>();
+	for (Bullet &b : prevBullets) {
+		Vec3f p = Vec3f(b.center, 0.f);
+		vec.PushEnd(p);
+	}
+	kdTree.BuildTree(vec);
+
+	for (Bullet &b : bullets) {
+		UINT nearestI = -1;
+		kdTree.KNearest(Vec3f(b.center, 0.f), 1, &nearestI, EPSILON);
+		if (nearestI != -1) {
+			Vec2f v = b.center - prevBullets[nearestI].center;
+			b.velocity = v;
 		}
 	}
-
-	for (UINT i = 0; i < bullets.size(); i++) {
-		int x = static_cast<int>(bullets[i]->center.x * GRID / (float)SCREEN_WIDTH);
-		int y = static_cast<int>(bullets[i]->center.y * GRID / (float)SCREEN_HEIGHT);
-
-		if (IsValidBucket(x, y)) {
-			buckets[x][y].push_back(bullets[i]);
-		}
-	}
-
-	for (UINT i = 0; i < prevBullets.size(); i++) {
-		const Bullet &b = *prevBullets[i];
-
-		if (ShouldIgnoreBullet(b)) {
-			continue;
-		}
-
-		// Do our best to match the bullet.
-		float bestDistanceSquared = FLT_MAX;
-		Bullet *bestBullet = NULL;
-
-		int x = static_cast<int>(b.center.x * GRID / (float)SCREEN_WIDTH);
-		int y = static_cast<int>(b.center.y * GRID / (float)SCREEN_HEIGHT);
-
-		for (int dx = -1; dx <= 1; dx++) {
-			for (int dy = -1; dy <= 1; dy++) {
-				if (!IsValidBucket(x + dx, y + dy)) {
-					continue;
-				}
-
-				for (Bullet *currentBullet : buckets[x + dx][y + dy]) {
-					if (b.bulletType != currentBullet->bulletType) {
-						continue;
-					}
-					float distanceSquared = GetDistanceSquared(currentBullet->center, b.center + b.velocity);
-					if (distanceSquared < bestDistanceSquared) {
-						distanceSquared = bestDistanceSquared;
-						bestBullet = currentBullet;
-					}
-					comps++;
-				}
-			}
-		}
-
-		if (bestBullet != NULL) {
-			bestBullet->velocity = bestBullet->center - b.center;
-			//g_Context->WriteConsole(String("BVelocity: ") + String(bestBullet->velocity.Length()), RGBColor::Green, OverlayPanelSystem);
-		}
-	}
-	//g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelSystem);
 }
 
 void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
@@ -90,32 +53,25 @@ void BulletManager::LoadBulletsFromCall(RenderInfo &info) {
 	TriListVertex *vs = (TriListVertex *)info.UserVertexData;
 
 	for (int i = 0; i < numPrimitives - 1; i+=2) {
-		Bullet *b;
 		try {
-			b = new Bullet(&vs[i * 3], info);
+			Bullet b = Bullet(&vs[i * 3], info);
+			if (b.IsDeadly()) {
+				bullets.push_back(b);
+			}
 		}
 		catch (BulletOffScreenException ex) {
-			i += 1;
-		}
-		if (b->IsDeadly() && !ShouldIgnoreBullet(*b)) {
-			bullets.push_back(b);
-		}
-		else {
-			delete b;
+			i -= 1;
 		}
 	}
 }
 
 void BulletManager::PrintAllBullets(ofstream &s) {
-	for (Bullet *b : bullets) {
-		b->Print(s);
+	for (Bullet b : bullets) {
+		b.Print(s);
 	}
 }
 
 void BulletManager::StartFrame() {
-	for (const Bullet *b : prevBullets) {
-		delete b;
-	}
 	prevBullets = move(bullets);
 }
 
@@ -123,17 +79,16 @@ void BulletManager::EndFrame() {
 	UpdateBullets();
 
 	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
-	g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelStatus);
 	if (bullets.size() > bulletsHWM) {
 		bulletsHWM = bullets.size();
 	}
-	if (comps > compsHWM) {
-		compsHWM = comps;
-	}
 	g_Context->WriteConsole(String("Bullets HWM: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
-	g_Context->WriteConsole(String("Comps HWM: ") + String(compsHWM), RGBColor::Cyan, OverlayPanelStatus);
-	comps = 0;
-	//PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
+
+#ifndef ULTRA_FAST
+	if (g_Context->Files.CurrentFrameAllEvents.is_open()) {
+		PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
+	}
+#endif
 }
 
 BulletManager::BulletManager() {

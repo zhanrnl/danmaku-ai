@@ -78,6 +78,7 @@ struct ManagerList
     //KnowledgeManager        Knowledge;
     //ControlGroupManager     ControlGroup;
 	BulletManager           Bullet;
+	PowerupManager			Powerup;
 	CharacterManager        Character;
 	PlayerManager			Player;
 };

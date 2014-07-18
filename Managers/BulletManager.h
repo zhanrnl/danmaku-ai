@@ -8,7 +8,7 @@ public:
 	BulletManager();
 	~BulletManager();
 
-	const vector<Bullet *> &getBullets() {
+	const vector<Bullet> &getBullets() {
 		return bullets;
 	}
 
@@ -19,14 +19,9 @@ private:
 	void UpdateBullets();
 	static bool IsValidBucket(int x, int y);
 
-	vector<Bullet *> bullets;
-	vector<Bullet *> prevBullets;
-
-	static const int GRID = 70;
-	vector<Bullet *> buckets[GRID][GRID];
-
-	UINT comps = 0;
-	UINT compsHWM = 0;
+	vector<Bullet> bullets;
+	vector<Bullet> prevBullets;
+	
 	UINT bulletsHWM = 0;
 };
 
