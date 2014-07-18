@@ -102,8 +102,8 @@ float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f pos
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
-	if (perpendicularVector.Length() > 6) return 0;
-	if (timeTillMatters > 10 || timeTillMatters < -3) return 0;
+	if (perpendicularVector.Length() > 10) return 0;
+	if (timeTillMatters > 10 || timeTillMatters < -2) return 0;
 
 	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * pow(timeTillMatters, 2)));
 
@@ -116,9 +116,13 @@ float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f pos
 	return currentUtility;
 }
 
+float UtilityStaticBullet(const Bullet &b, Vec2f &p) {
+	return -0.2f / (p - b.center).LengthSq();
+}
+
 float UtilityFromBullet(const Bullet &b, Vec2f position) {
 	if (b.velocity.LengthSq() < EPSILON) {
-		return 0;
+		return UtilityStaticBullet(b, position);
 	}
 
 	Vec2f bulletPosition = b.center;// +b->velocity;
@@ -134,13 +138,13 @@ float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
 	case POWER:
 	case POWER_LARGE:
 	case ONE_UP:
-	case SCORE_BLUE:
-	case SCORE_BLUE_LARGE:
+	//case SCORE_BLUE:
+	//case SCORE_BLUE_LARGE:
 		break;
 	default:
 		return 0.0f;
 	}
-	return -0.1f * (position - p.center).LengthSq();
+	return -0.01f * (position - p.center).LengthSq();
 }
 
 void PlayerManager::EndFrame() {
@@ -207,7 +211,7 @@ void PlayerManager::EndFrame() {
 	if (utilityLWM > bestUtility) {
 		utilityLWM = bestUtility;
 	}
-	g_Context->WriteConsole(String("Utility LWM: ") + String(utilityLWM), RGBColor::Cyan, OverlayPanelStatus);
+	//g_Context->WriteConsole(String("Utility LWM: ") + String(utilityLWM), RGBColor::Cyan, OverlayPanelStatus);
 
 	if (g_Context->Managers.Character.getWasDead() && bombs > 0) {
 		gameplay.bomb();
@@ -240,8 +244,9 @@ void PlayerManager::EndFrame() {
 	}
 
 	bool shouldFocus = (bestFo == FOCUS);
-
-	gameplay.move(movement, true, shouldFocus);
+	// release fire button every second to page through dialogue
+	bool shouldShoot = (g_Context->Controller.FrameIndex() % 60 != 0);
+	gameplay.move(movement, shouldShoot, shouldFocus);
 
 	if (slowMode) {
 		Sleep(50);

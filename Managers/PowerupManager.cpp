@@ -31,8 +31,7 @@ Powerup::~Powerup() {}
 PowerupType Powerup::PowerupTypeFor(float u, float v) {
 	int col = (int)((u + EPSILON) * 16);
 	int row = (int)((v + EPSILON) * 16);
-	if (row != 13) return NOT_A_POWERUP;
-	col = col % 8;
+	if (row != 13 || col >= 8) return NOT_A_POWERUP;
 	return (PowerupType)col;
 }
 
