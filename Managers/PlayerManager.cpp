@@ -162,7 +162,7 @@ float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
 
 	float lengthSquared = (position - p.center).LengthSq();
 
-	if (lengthSquared < 2500) {
+	if (lengthSquared < 1000) {
 		return -utility * pow(lengthSquared, 0.25f);
 	}
 	return -utility * lengthSquared;
@@ -179,10 +179,6 @@ float GetBulletWeight(const Bullet &b) {
 	}
 }
 
-float GetBossDpsFavoritism(Vec2f bossPosition, Vec2f position) {
-	return - 0.01f * (bossPosition.x - position.x) * (bossPosition.x - position.x);
-}
-
 void PlayerManager::EndFrame() {
 	Vec2f characterPosition = g_Context->Managers.Character.getPosition();
 
@@ -194,7 +190,6 @@ void PlayerManager::EndFrame() {
 	const vector<Bullet> bullets = g_Context->Managers.Bullet.getBullets();
 	const vector<Powerup> powerups = g_Context->Managers.Powerup.getPowerups();
 	const UINT bombs = g_Context->Managers.Character.getBombs();
-	const Vec2f *bossPosition = g_Context->Managers.Bullet.getBossLocation();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
 
@@ -230,10 +225,6 @@ void PlayerManager::EndFrame() {
 
 				for (const Powerup p : powerups) {
 					utilities[lrm][udm][fo] += UtilityFromPowerupPosition(p, nextPosition);
-				}
-
-				if (bossPosition != NULL) {
-					GetBossDpsFavoritism(*bossPosition, nextPosition);
 				}
 
 				utilities[lrm][udm][fo] += -10.0f / abs(nextPosition.x - LOW_X);
