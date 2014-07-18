@@ -117,12 +117,21 @@ float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f pos
 }
 
 float UtilityStaticBullet(const Bullet &b, Vec2f &p) {
-	return -0.2f / (p - b.center).LengthSq();
+	float distanceSquaredToBullet = (p - b.center).LengthSq();
+	float distanceToBullet = sqrt(distanceSquaredToBullet);
+	float currentUtility = -0.2f / distanceSquaredToBullet;
+
+	float smallerDimension = min(b.dimensions.x, b.dimensions.y) / 2.0f;
+	if (distanceSquaredToBullet < distanceToBullet) {
+		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension / distanceToBullet));
+	}
+
+	return currentUtility;
 }
 
 float UtilityFromBullet(const Bullet &b, Vec2f position) {
 	if (b.velocity.LengthSq() < EPSILON) {
-		return UtilityStaticBullet(b, position);
+		return 2.0f * UtilityStaticBullet(b, position);
 	}
 
 	Vec2f bulletPosition = b.center;// +b->velocity;
@@ -155,9 +164,20 @@ float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
 	float lengthSquared = (position - p.center).LengthSq();
 
 	if (lengthSquared < 1000) {
-		return -utility * pow(lengthSquared, 0.25);
+		return -utility * pow(lengthSquared, 0.25f);
 	}
 	return -utility * lengthSquared;
+}
+
+float GetBulletWeight(const Bullet &b) {
+	switch (b.bulletType) {
+	case ENEMY:
+		return 3.0f;
+	case BOSS:
+		return 10.0f;
+	default:
+		return 1.0;
+	}
 }
 
 void PlayerManager::EndFrame() {
@@ -185,7 +205,7 @@ void PlayerManager::EndFrame() {
 					static_cast<FocusOptions>(fo));
 
 				for (const Bullet b : bullets) {
-					utilities[lrm][udm][fo] += UtilityFromBullet(b, nextPosition);
+					utilities[lrm][udm][fo] += GetBulletWeight(b) * UtilityFromBullet(b, nextPosition);
 				}
 
 				for (const Powerup p : powerups) {
