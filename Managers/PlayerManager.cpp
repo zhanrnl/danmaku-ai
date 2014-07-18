@@ -91,13 +91,7 @@ Vec2f GetNextPosition(Vec2f currentPosition, LeftRightMovement lrm, UpDownMoveme
 	return prospectivePosition;
 }
 
-float UtilityFromBullet(const Bullet &b, Vec2f position) {
-	if (b.velocity.LengthSq() < EPSILON) {
-		return 0;
-	}
-
-	Vec2f bulletPosition = b.center;// +b->velocity;
-
+float UtilityFromBulletPosition(const Bullet &b, Vec2f bulletPosition, Vec2f position) {
 	Vec2f bulletToPosition = position - bulletPosition;
 	Vec2f parallelVector = b.velocity * (Vec2f::Dot(bulletToPosition, b.velocity) / b.velocity.LengthSq());
 	Vec2f perpendicularVector = bulletToPosition - parallelVector;
@@ -115,14 +109,27 @@ float UtilityFromBullet(const Bullet &b, Vec2f position) {
 	float smallerDimension = min(b.dimensions.x, b.dimensions.y) / 2.0f;
 	float distanceToBullet = (bulletPosition - position).Length();
 	if (distanceToBullet < smallerDimension) {
-		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension /  distanceToBullet));
+		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension / distanceToBullet));
 	}
 
-	currentUtility += -10.0f / abs(position.x - LOW_X);
-	currentUtility += -10.0f / abs(position.x - HIGH_X);
-	currentUtility += -10.0f / abs(position.x - HIGH_Y);
+	return currentUtility;
+}
+
+float UtilityFromBullet(const Bullet &b, Vec2f position) {
+	if (b.velocity.LengthSq() < EPSILON) {
+		return 0;
+	}
+
+	Vec2f bulletPosition = b.center;// +b->velocity;
+	float currentUtility = 0.0;
+	currentUtility += UtilityFromBulletPosition(b, bulletPosition, position);
+	currentUtility += UtilityFromBulletPosition(b, bulletPosition + b.velocity, position);
 
 	return currentUtility;
+}
+
+float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
+	return -0.1f * (position - p.center).LengthSq();
 }
 
 void PlayerManager::EndFrame() {
@@ -134,6 +141,7 @@ void PlayerManager::EndFrame() {
 	}
 
 	const vector<Bullet> bullets = g_Context->Managers.Bullet.getBullets();
+	const vector<Powerup> powerups = g_Context->Managers.Powerup.getPowerups();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
 
@@ -150,6 +158,15 @@ void PlayerManager::EndFrame() {
 				for (const Bullet b : bullets) {
 					utilities[lrm][udm][fo] += UtilityFromBullet(b, nextPosition);
 				}
+
+				for (const Powerup p : powerups) {
+					utilities[lrm][udm][fo] += UtilityFromPowerupPosition(p, nextPosition);
+				}
+
+				utilities[lrm][udm][fo] += -10.0f / abs(nextPosition.x - LOW_X);
+				utilities[lrm][udm][fo] += -10.0f / abs(nextPosition.x - HIGH_X);
+				utilities[lrm][udm][fo] += -10.0f / abs(nextPosition.y - HIGH_Y);
+				utilities[lrm][udm][fo] += -100.0f / abs(nextPosition.y - LOW_Y);
 				//g_Context->Files.CurrentFrameAllEvents << "Utilities: " << utilities[lrm][udm][fo] << endl;
 			}
 		}
