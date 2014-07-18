@@ -29,6 +29,29 @@ void CharacterManager::UpdateCharacterFromCall(RenderInfo &info) {
 	}
 }
 
+void CharacterManager::UpdateIsDeadFromCall(RenderInfo &info) {
+	int numPrimitives = info.PrimitiveCount;
+	TriListVertex *vertices = (TriListVertex *)info.UserVertexData;
+	for (int i = 0; i < numPrimitives * 3; i += 6) {
+		TriListVertex upper_left = vertices[i];
+		TriListVertex lower_right = vertices[i + 5];
+
+		Vec4f center4d = (upper_left.p + lower_right.p) / 2;
+		Vec2f center = Vec2f(center4d.x, center4d.y);
+		if ((center - position).LengthSq() <= 36) {
+			int col = (int)((EPSILON + upper_left.uv.x) * 16);
+			int row = (int)((EPSILON + upper_left.uv.y) * 16);
+
+			if (row == 1) {
+				dead |= (col == 8 || col == 12);
+			}
+			else if (row == 5) {
+				dead |= (col == 0 || col == 4);
+			}
+		}
+	}
+}
+
 UINT UVToDigit(Vec2f uv) {
 	float u = uv.x;
 	return (UINT)((u * 32.f) + EPSILON) - 21;
@@ -65,4 +88,6 @@ void CharacterManager::UpdateScoreFromCall(RenderInfo &info) {
 void CharacterManager::EndFrame() {
 	//g_Context->WriteConsole(String("Lives: ") + String(lives), RGBColor::Yellow, OverlayPanelStatus);
 	//g_Context->WriteConsole(String("Bombs: ") + String(power), RGBColor::Yellow, OverlayPanelStatus);
+	wasDead = dead;
+	dead = false;
 }

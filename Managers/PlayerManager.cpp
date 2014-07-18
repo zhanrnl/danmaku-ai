@@ -223,7 +223,7 @@ void PlayerManager::EndFrame() {
 
 	bool shouldFocus = (bestFo == FOCUS);
 
-	gameplay.move(movement, true, shouldFocus);
+	//gameplay.move(movement, true, shouldFocus);
 
 	if (slowMode) {
 		Sleep(50);

@@ -14,8 +14,12 @@ public:
 	UINT getBombs() {
 		return power;
 	}
+	bool getWasDead() {
+		return wasDead;
+	}
 	void UpdateCharacterFromCall(RenderInfo &info);
 	void UpdateScoreFromCall(RenderInfo &info);
+	void UpdateIsDeadFromCall(RenderInfo &info);
 
 	void EndFrame();
 
@@ -26,5 +30,7 @@ private:
 	Vec2f position;
 	UINT lives;
 	UINT power; // rounded down
+	bool dead; // whether the character is dead this frame
+	bool wasDead; // whether the character was dead last frame (used to determine when to deathbomb)
 };
 

@@ -1255,6 +1255,8 @@ bool RenderManager::Draw(RenderInfo &Info)
 
 	if (IsPowerupDrawCall(Info)) {
 		g_Context->Managers.Powerup.LoadPowerupsFromCall(Info);
+		// Unforunately the explosion that appears when a player dies is part of the powerups spritesheet.
+		g_Context->Managers.Character.UpdateIsDeadFromCall(Info);
 	}
 
     //
