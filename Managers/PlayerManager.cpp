@@ -10,10 +10,12 @@ const float ORTHOGONAL_SPEED_UNFOCUSED = 4;
 
 const float EPSILON = 0.00001f;
 
-const float LOW_Y = 50.0;// 47.5;
-const float HIGH_Y = 440.0; // 447.5;
-const float LOW_X = 50.0;// 39.5;
-const float HIGH_X = 400.0;// 407.5;
+const float LOW_Y = 47.5;
+const float HIGH_Y = 447.5;
+const float LOW_X = 39.5;
+const float HIGH_X = 407.5;
+
+const float COLLIDE_WITH_BULLET = -1000.0;
 
 enum LeftRightMovement {
 	LEFT_RIGHT_NONE,
@@ -35,7 +37,7 @@ enum FocusOptions {
 	NUM_FOCUS_OPTIONS,
 };
 
-PlayerManager::PlayerManager() : gameplay() {
+PlayerManager::PlayerManager() : gameplay(), utilityLWM(0), slowMode(false) {
 	
 }
 
@@ -94,7 +96,9 @@ float UtilityFromBullet(const Bullet *b, Vec2f position) {
 		return 0;
 	}
 
-	Vec2f bulletToPosition = position - b->center;
+	Vec2f bulletPosition = b->center;// +b->velocity;
+
+	Vec2f bulletToPosition = position - bulletPosition;
 	Vec2f parallelVector = b->velocity * (Vec2f::Dot(bulletToPosition, b->velocity) / b->velocity.LengthSq());
 	Vec2f perpendicularVector = bulletToPosition - parallelVector;
 
@@ -103,9 +107,20 @@ float UtilityFromBullet(const Bullet *b, Vec2f position) {
 
 	//g_Context->Files.CurrentFrameAllEvents << "PVector: " << perpendicularVector.Length() << endl;
 
-	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * timeTillMatters));
+	if (perpendicularVector.Length() > 6) return 0;
+	if (timeTillMatters > 10 || timeTillMatters < -3) return 0;
 
-	currentUtility += - 1 / (b->center - position).LengthSq();
+	float currentUtility = min(0.0f, -1.0f / (perpendicularVector.Length() * pow(timeTillMatters, 2)));
+
+	float smallerDimension = min(b->dimensions.x, b->dimensions.y) / 2.0f;
+	float distanceToBullet = (bulletPosition - position).Length();
+	if (distanceToBullet < smallerDimension) {
+		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension /  distanceToBullet));
+	}
+
+	currentUtility += -10.0f / abs(position.x - LOW_X);
+	currentUtility += -10.0f / abs(position.x - HIGH_X);
+	currentUtility += -10.0f / abs(position.x - HIGH_Y);
 
 	return currentUtility;
 }
@@ -160,6 +175,10 @@ void PlayerManager::EndFrame() {
 
 	g_Context->WriteConsole(String("AI: ") + String(bestLrm) + String(bestUdm) + String(bestFo) + String("|") + String(bestUtility), RGBColor::Green, OverlayPanelStatus);
 
+	if (utilityLWM > bestUtility) {
+		utilityLWM = bestUtility;
+	}
+	g_Context->WriteConsole(String("Utility LWM: ") + String(utilityLWM), RGBColor::Cyan, OverlayPanelStatus);
 	// Send the output
 	int movement = 0;
 
@@ -188,4 +207,8 @@ void PlayerManager::EndFrame() {
 	bool shouldFocus = (bestFo == FOCUS);
 
 	gameplay.move(movement, true, shouldFocus);
+
+	if (slowMode) {
+		Sleep(50);
+	}
 }

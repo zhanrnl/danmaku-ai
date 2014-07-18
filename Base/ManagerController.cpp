@@ -98,6 +98,8 @@ void ManagerController::FrameStart()
         
 		g_Context->WriteConsole(String("Capturing frame ") + String(_FrameIndex), RGBColor::Red, OverlayPanelSystem);
     }
+
+	g_Context->Managers.Player.slowMode = Pressed(GetAsyncKeyState(KEY_F12));
     
 	g_Context->Graphics.Overlay().ClearPanel(OverlayPanelStatus);
 	if(_ConsoleEnabled)

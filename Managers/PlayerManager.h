@@ -11,6 +11,9 @@ public:
 
 	void EndFrame();
 
+	bool slowMode;
+
 private:
 	Gameplay gameplay;
+	float utilityLWM;
 };

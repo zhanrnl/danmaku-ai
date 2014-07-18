@@ -136,6 +136,7 @@ void BulletManager::EndFrame() {
 	//PrintAllBullets(g_Context->Files.CurrentFrameAllEvents);
 }
 
-BulletManager::BulletManager() {}
+BulletManager::BulletManager() {
+}
 
 BulletManager::~BulletManager() {}
