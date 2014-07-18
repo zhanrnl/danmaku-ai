@@ -1,6 +1,7 @@
 #include "Main.h"
 
 #include "PlayerManager.h"
+#include "PowerupManager.h"
 
 #include <limits>
 
@@ -16,6 +17,8 @@ const float LOW_X = 39.5;
 const float HIGH_X = 407.5;
 
 const float COLLIDE_WITH_BULLET = -1000.0;
+
+const float BOMB_THRESHOLD = -30000.0;
 
 enum LeftRightMovement {
 	LEFT_RIGHT_NONE,
@@ -129,6 +132,16 @@ float UtilityFromBullet(const Bullet &b, Vec2f position) {
 }
 
 float UtilityFromPowerupPosition(const Powerup &p, Vec2f position) {
+	switch (p.powerupType) {
+	case POWER:
+	case POWER_LARGE:
+	case ONE_UP:
+	case SCORE_BLUE:
+	case SCORE_BLUE_LARGE:
+		break;
+	default:
+		return 0.0f;
+	}
 	return -0.1f * (position - p.center).LengthSq();
 }
 
@@ -142,6 +155,7 @@ void PlayerManager::EndFrame() {
 
 	const vector<Bullet> bullets = g_Context->Managers.Bullet.getBullets();
 	const vector<Powerup> powerups = g_Context->Managers.Powerup.getPowerups();
+	const UINT bombs = g_Context->Managers.Character.getBombs();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
 
@@ -196,6 +210,12 @@ void PlayerManager::EndFrame() {
 		utilityLWM = bestUtility;
 	}
 	g_Context->WriteConsole(String("Utility LWM: ") + String(utilityLWM), RGBColor::Cyan, OverlayPanelStatus);
+
+	if (bestUtility <= BOMB_THRESHOLD && bombs > 0) {
+		gameplay.bomb();
+		return;
+	}
+
 	// Send the output
 	int movement = 0;
 

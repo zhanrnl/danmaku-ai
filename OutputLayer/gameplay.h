@@ -26,6 +26,8 @@ private:
     bool z_pressed;
     bool shift_pressed;
     bool control_pressed;
+
+	bool x_pressed;
 };
 
 #endif  // GAMEPLAY_H
