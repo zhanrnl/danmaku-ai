@@ -21,12 +21,7 @@ private:
 
 	vector<Bullet> bullets;
 	vector<Bullet> prevBullets;
-
-	static const int GRID = 70;
-	//vector<Bullet *> buckets[GRID][GRID];
-
-	UINT comps = 0;
-	UINT compsHWM = 0;
+	
 	UINT bulletsHWM = 0;
 };
 

@@ -6,15 +6,11 @@
 
 const float EPSILON = 0.00001f;
 const float EXCLUDE_ALL_RADIUS = 250.f; // all bullets outside of this radius around player are ignored
-const float EXCLUDE_MOVING_AWAY_RADIUS = 100.f; // all bullets moving away from player outside of this radius around player are ignored
 
 bool ShouldIgnoreBullet(const Bullet &b) {
 	Vec2f d = g_Context->Managers.Character.getPosition() - b.center;
 	float distFromPlayerSq = d.LengthSq();
 	if (distFromPlayerSq > EXCLUDE_ALL_RADIUS * EXCLUDE_ALL_RADIUS) {
-		return true;
-	}
-	if (distFromPlayerSq > EXCLUDE_MOVING_AWAY_RADIUS * EXCLUDE_MOVING_AWAY_RADIUS && Vec2f::Dot(b.velocity, d) < 0.f - EPSILON) {
 		return true;
 	}
 	return false;
@@ -26,10 +22,6 @@ float GetBulletDistanceSquared(const Bullet &b1, const Bullet &b2) {
 
 float GetDistanceSquared(const Vec2f &l1, const Vec2f &l2) {
 	return (l1 - l2).LengthSq();
-}
-
-bool BulletManager::IsValidBucket(int x, int y) {
-	return 0 <= x && x < GRID && 0 <= y && y < GRID;
 }
 
 void BulletManager::UpdateBullets() {
@@ -87,16 +79,10 @@ void BulletManager::EndFrame() {
 	UpdateBullets();
 
 	g_Context->WriteConsole(String("Bullets: ") + String(bullets.size()), RGBColor::Green, OverlayPanelStatus);
-	g_Context->WriteConsole(String("Comps: ") + String(comps), RGBColor::Green, OverlayPanelStatus);
 	if (bullets.size() > bulletsHWM) {
 		bulletsHWM = bullets.size();
 	}
-	if (comps > compsHWM) {
-		compsHWM = comps;
-	}
 	g_Context->WriteConsole(String("Bullets HWM: ") + String(bulletsHWM), RGBColor::Cyan, OverlayPanelStatus);
-	g_Context->WriteConsole(String("Comps HWM: ") + String(compsHWM), RGBColor::Cyan, OverlayPanelStatus);
-	comps = 0;
 
 #ifndef ULTRA_FAST
 	if (g_Context->Files.CurrentFrameAllEvents.is_open()) {

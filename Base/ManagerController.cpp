@@ -38,6 +38,7 @@ void ManagerController::Init()
     //_ManagerList.PushEnd(&g_Context->Managers.ControlGroup);
     //_ManagerList.PushEnd(&g_Context->Managers.Thought);
 	_ManagerList.PushEnd(&g_Context->Managers.Bullet);
+	_ManagerList.PushEnd(&g_Context->Managers.Powerup);
 	_ManagerList.PushEnd(&g_Context->Managers.Character);
 	_ManagerList.PushEnd(&g_Context->Managers.Player);
     
