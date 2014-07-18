@@ -101,6 +101,7 @@ void ManagerController::FrameStart()
     }
 
 	g_Context->Managers.Player.slowMode = Pressed(GetAsyncKeyState(KEY_F12));
+	g_Context->Managers.Player.noShoot = Pressed(GetAsyncKeyState(KEY_F9));
     
 	g_Context->Graphics.Overlay().ClearPanel(OverlayPanelStatus);
 	if(_ConsoleEnabled)

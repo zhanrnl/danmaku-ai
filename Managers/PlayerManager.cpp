@@ -38,7 +38,7 @@ enum FocusOptions {
 	NUM_FOCUS_OPTIONS,
 };
 
-PlayerManager::PlayerManager() : gameplay(), utilityLWM(0), slowMode(false) {
+PlayerManager::PlayerManager() : gameplay(), utilityLWM(0), slowMode(false), noShoot(false) {
 	
 }
 
@@ -246,6 +246,9 @@ void PlayerManager::EndFrame() {
 	bool shouldFocus = (bestFo == FOCUS);
 	// release fire button every second to page through dialogue
 	bool shouldShoot = (g_Context->Controller.FrameIndex() % 60 != 0);
+	if (noShoot) {
+		shouldShoot = false;
+	}
 	gameplay.move(movement, shouldShoot, shouldFocus);
 
 	if (slowMode) {

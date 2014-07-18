@@ -12,6 +12,7 @@ public:
 	void EndFrame();
 
 	bool slowMode;
+	bool noShoot;
 
 private:
 	Gameplay gameplay;
