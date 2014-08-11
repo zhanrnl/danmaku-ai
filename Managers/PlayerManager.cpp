@@ -119,7 +119,7 @@ float UtilityStaticBullet(const Bullet &b, Vec2f &p) {
 	float currentUtility = -0.2f / distanceSquaredToBullet;
 
 	float smallerDimension = min(b.dimensions.x, b.dimensions.y) / 2.0f;
-	if (distanceSquaredToBullet < distanceToBullet) {
+	if (distanceToBullet < smallerDimension) {
 		currentUtility += COLLIDE_WITH_BULLET * (1 + (smallerDimension / distanceToBullet));
 	}
 
@@ -191,6 +191,7 @@ void PlayerManager::EndFrame() {
 
 	const vector<Bullet> bullets = g_Context->Managers.Bullet.getBullets();
 	const vector<Powerup> powerups = g_Context->Managers.Powerup.getPowerups();
+
 	const UINT bombs = g_Context->Managers.Character.getBombs();
 
 	float utilities[NUM_LEFT_RIGHT][NUM_UP_DOWN][NUM_FOCUS_OPTIONS];
@@ -224,7 +225,6 @@ void PlayerManager::EndFrame() {
 						utilities[lrm][udm][fo] += u;
 					}
 				}
-
 				for (const Powerup p : powerups) {
 					utilities[lrm][udm][fo] += UtilityFromPowerupPosition(p, nextPosition);
 				}
